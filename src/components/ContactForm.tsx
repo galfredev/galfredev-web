@@ -1,0 +1,144 @@
+'use client';
+import { sendToN8N } from '@/lib/n8n';
+import { motion } from 'framer-motion';
+import { CheckCircle2, Send } from 'lucide-react';
+import { useState } from 'react';
+
+export default function ContactForm() {
+    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setStatus('loading');
+
+        const formData = new FormData(e.currentTarget);
+        const data = Object.fromEntries(formData.entries());
+
+        const success = await sendToN8N(data);
+
+        if (success) {
+            setStatus('success');
+            (e.target as HTMLFormElement).reset();
+        } else {
+            setStatus('error');
+            setTimeout(() => setStatus('idle'), 3000);
+        }
+    };
+
+    return (
+        <section className="py-24 px-6 max-w-4xl mx-auto" id="contacto">
+            <div className="text-center mb-16 space-y-4">
+                <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter">
+                    Hablemos de tu <span className="text-cyan-400">proyecto</span>
+                </h2>
+                <p className="text-gray-400 max-w-lg mx-auto">
+                    ¿Listo para automatizar? Contame qué necesitás y te respondo con propuestas concretas.
+                </p>
+            </div>
+
+            <motion.form
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                onSubmit={handleSubmit}
+                className="glass-card p-10 space-y-8"
+            >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Nombre Completo</label>
+                        <input
+                            name="nombre"
+                            type="text"
+                            required
+                            placeholder="Tu nombre y apellido"
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:border-cyan-400 focus:bg-white/10 outline-none transition-all placeholder:text-gray-600"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Email</label>
+                        <input
+                            name="email"
+                            type="email"
+                            required
+                            placeholder="tu@email.com"
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:border-cyan-400 focus:bg-white/10 outline-none transition-all placeholder:text-gray-600"
+                        />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">WhatsApp (con código de país)</label>
+                        <input
+                            name="whatsapp"
+                            type="tel"
+                            placeholder="+54 9 351..."
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:border-cyan-400 focus:bg-white/10 outline-none transition-all placeholder:text-gray-600"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Servicio de Interés</label>
+                        <select
+                            name="servicio"
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:border-cyan-400 focus:bg-white/10 outline-none transition-all appearance-none"
+                        >
+                            <option value="automatizacion" className="bg-zinc-900">Automatización con IA</option>
+                            <option value="desarrollo" className="bg-zinc-900">Desarrollo Web / App</option>
+                            <option value="consultoria" className="bg-zinc-900">Consultoría Técnica</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div className="space-y-2">
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">¿Cuándo necesitás empezar?</label>
+                    <select
+                        name="deadline"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:border-cyan-400 focus:bg-white/10 outline-none transition-all appearance-none"
+                    >
+                        <option value="asap" className="bg-zinc-900">Lo antes posible</option>
+                        <option value="mes" className="bg-zinc-900">En el próximo mes</option>
+                        <option value="explorando" className="bg-zinc-900">Estoy explorando opciones</option>
+                    </select>
+                </div>
+
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-500 uppercase tracking-widest ml-1">Contame sobre tu proyecto</label>
+                        <textarea
+                            name="detalles"
+                            rows={5}
+                            required
+                            placeholder="Describí qué proceso querés automatizar o qué app querés construir..."
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white focus:border-cyan-400 focus:bg-white/10 outline-none transition-all placeholder:text-gray-600 resize-none"
+                        />
+                    </div>
+
+                    <div className="flex items-start gap-3 ml-1">
+                        <input
+                            type="checkbox"
+                            required
+                            name="privacidad"
+                            id="privacidad"
+                            className="mt-1 w-4 h-4 rounded border-gray-600 bg-white/5 accent-cyan-500 focus:ring-cyan-500 focus:ring-offset-gray-900"
+                        />
+                        <label htmlFor="privacidad" className="text-sm text-gray-400">
+                            He leído y acepto la <a href="/privacidad" target="_blank" className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2">Política de Privacidad</a> y entiendo que mis datos serán almacenados para el seguimiento de la consulta.
+                        </label>
+                    </div>
+                </div>
+
+                <button
+                    disabled={status === 'loading'}
+                    className="w-full py-5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl text-white font-black text-xl hover:shadow-[0_10px_30px_rgba(34,211,238,0.3)] transition-all flex items-center justify-center gap-3 active:scale-[0.98] disabled:opacity-50"
+                >
+                    {status === 'loading' ? (
+                        <span className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : status === 'success' ? (
+                        <><CheckCircle2 /> Mensaje Enviado</>
+                    ) : (
+                        <><Send size={20} /> Enviar Propuesta</>
+                    )}
+                </button>
+            </motion.form>
+        </section>
+    );
+}
