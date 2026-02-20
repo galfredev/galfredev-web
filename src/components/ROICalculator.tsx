@@ -8,13 +8,16 @@ export default function ROICalculator() {
     const [rate, setRate] = useState(50);
     const [currency, setCurrency] = useState<'USD' | 'ARS'>('USD');
 
-    const rates = { USD: 1, ARS: 1200 }; // Example conversion
-    const annualSavings = hours * rate * 52;
+    const rates = { USD: 1, ARS: 1200 }; // Tasa de conversión base para mostrar sueldos latinos
+
+    // Si es ARS, multiplicamos la tarifa por la tasa de cambio de forma dinámica.
+    const currentRate = currency === 'ARS' ? rate * rates.ARS : rate;
+    const annualSavings = hours * currentRate * 52;
     const timeSaved = hours * 52;
 
     const formatValue = (val: number) => {
         return currency === 'ARS'
-            ? (val * rates.ARS).toLocaleString('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 })
+            ? val.toLocaleString('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 })
             : val.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
     };
 
@@ -63,8 +66,8 @@ export default function ROICalculator() {
 
                             <div className="space-y-4">
                                 <div className="flex justify-between text-sm font-heading">
-                                    <label className="text-white font-black uppercase tracking-widest text-[10px]">Costo por hora ({currency})</label>
-                                    <span className="text-cyan-400 font-black">{formatValue(rate).split('.')[0]}</span>
+                                    <label className="text-white font-black uppercase tracking-widest text-[10px]">Costo base por hora ({currency})</label>
+                                    <span className="text-cyan-400 font-black">{formatValue(currentRate).split(',')[0].split('.')[0]}</span>
                                 </div>
                                 <input
                                     type="range" min="10" max="500" value={rate}

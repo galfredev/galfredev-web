@@ -24,23 +24,23 @@ export default function AboutMe() {
                         <motion.div
                             animate={{ y: [0, -10, 0] }}
                             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                            className="absolute top-10 -right-4 z-20 px-4 py-2 glass-card border-cyan-500/30 text-white text-xs font-bold flex items-center gap-2"
+                            className="absolute top-10 -right-4 z-20 px-4 py-2 glass-card border-cyan-500/30 text-white text-[10px] font-bold flex items-center gap-2"
                         >
-                            <GraduationCap size={14} className="text-cyan-400" /> UTN FRC
+                            <GraduationCap size={14} className="text-cyan-400" /> Ing. en Sistemas (En Proceso)
                         </motion.div>
                         <motion.div
                             animate={{ y: [0, 10, 0] }}
                             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                            className="absolute bottom-20 -left-4 z-20 px-4 py-2 glass-card border-blue-500/30 text-white text-xs font-bold flex items-center gap-2"
+                            className="absolute bottom-20 -left-6 z-20 px-4 py-2 glass-card border-blue-500/30 text-white text-[10px] font-bold flex items-center gap-2"
                         >
-                            <Zap size={14} className="text-blue-400" /> Ing. Sistemas
+                            <Cpu size={14} className="text-blue-400" /> Backend Developer Career (En Proceso)
                         </motion.div>
                         <motion.div
                             animate={{ scale: [1, 1.1, 1] }}
                             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                            className="absolute top-1/2 -left-8 z-20 px-4 py-2 glass-card border-white/20 text-white text-xs font-bold flex items-center gap-2"
+                            className="absolute top-1/2 -left-8 z-20 px-4 py-2 glass-card border-white/20 text-white text-[10px] font-bold flex items-center gap-2"
                         >
-                            <Cpu size={14} className="text-purple-400" /> IA Enthusiast
+                            <Zap size={14} className="text-purple-400" /> Inglés Orientado al Desarrollo
                         </motion.div>
                     </div>
                 </motion.div>
@@ -69,11 +69,24 @@ export default function AboutMe() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="flex items-center gap-3 p-4 glass-card border-white/5">
                             <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400">🏛️</div>
-                            <span className="text-sm font-bold text-gray-300">UTN FRC — Ing. Sistemas</span>
+                            <div>
+                                <span className="block text-xs font-bold text-gray-300">UTN FRC — Ing. Sistemas</span>
+                                <span className="text-[10px] text-cyan-400 uppercase tracking-widest font-black">En Proceso</span>
+                            </div>
                         </div>
                         <div className="flex items-center gap-3 p-4 glass-card border-white/5">
-                            <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">🤖</div>
-                            <span className="text-sm font-bold text-gray-300">AI Automation Certified</span>
+                            <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">💻</div>
+                            <div>
+                                <span className="block text-xs font-bold text-gray-300">Backend Dev Career</span>
+                                <span className="text-[10px] text-blue-400 uppercase tracking-widest font-black">En Proceso</span>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-3 p-4 glass-card border-white/5 sm:col-span-2">
+                            <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">🌎</div>
+                            <div>
+                                <span className="block text-xs font-bold text-gray-300">Inglés Orientado al Desarrollo</span>
+                                <span className="text-[10px] text-purple-400 uppercase tracking-widest font-black">Certificado</span>
+                            </div>
                         </div>
                     </div>
 

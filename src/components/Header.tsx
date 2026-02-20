@@ -17,13 +17,15 @@ export default function Header() {
                 />
             </Link>
 
-            <nav className="hidden md:flex gap-8 text-sm font-black text-white/60 font-heading">
+            <nav className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-8 text-sm font-black text-white/60 font-heading">
                 <Link href="#sobre-mi" className="hover:text-cyan-400 transition-colors uppercase tracking-widest">Sobre Mí</Link>
                 <Link href="#skills" className="hover:text-cyan-400 transition-colors uppercase tracking-widest">Skills</Link>
                 <Link href="#proyectos" className="hover:text-cyan-400 transition-colors uppercase tracking-widest">Proyectos</Link>
                 <Link href="#contacto" className="hover:text-cyan-400 transition-colors uppercase tracking-widest">Contacto</Link>
-                <Link href="/login" className="px-6 py-2 glass-card hover:bg-white/10 transition-all text-white border-white/10 uppercase tracking-widest">Mi Cuenta</Link>
             </nav>
+            <div className="hidden md:block">
+                <Link href="/login" className="px-6 py-2 glass-card hover:bg-white/10 transition-all text-white border-white/10 uppercase tracking-widest font-heading text-sm font-black">Mi Cuenta</Link>
+            </div>
         </header>
     );
 }

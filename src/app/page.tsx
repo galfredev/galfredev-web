@@ -34,9 +34,9 @@ export default function Home() {
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" /> Automatización con IA de Siguiente Nivel
           </div>
 
-          <h1 className="text-6xl md:text-8xl font-black text-white leading-none tracking-tighter font-heading">
+          <h1 className="text-6xl md:text-8xl font-black text-white leading-none tracking-tighter">
             Escalá tu empresa <br />
-            <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent italic">en piloto automático.</span>
+            <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">en piloto automático.</span>
           </h1>
 
           <p className="text-gray-400 text-xl max-w-2xl leading-relaxed">
