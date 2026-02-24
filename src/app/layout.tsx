@@ -1,4 +1,5 @@
 import WhatsAppButton from '@/components/WhatsAppButton';
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from 'next';
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
@@ -43,6 +44,7 @@ export default function RootLayout({
             <body className={`${plusJakarta.variable} ${inter.variable} font-sans antialiased bg-black text-white`}>
                 {children}
                 <WhatsAppButton />
+                <Analytics />
             </body>
         </html>
     );
