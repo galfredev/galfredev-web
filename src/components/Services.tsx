@@ -1,5 +1,4 @@
 'use client';
-import { motion } from 'framer-motion';
 import { Bot, Globe, Lightbulb, Microscope, Smartphone, Zap } from 'lucide-react';
 
 const services = [
@@ -64,45 +63,71 @@ export default function Services() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {services.map((service, idx) => (
-                    <motion.div
+                    <div
                         key={idx}
-                        whileHover={{ y: -10 }}
-                        className="group relative h-80 perspective-1000"
+                        className="group relative h-[380px] perspective-1000"
                     >
                         <div className="relative w-full h-full transition-all duration-700 preserve-3d group-hover:rotate-y-180">
-                            {/* Front */}
-                            <div className="absolute inset-0 backface-hidden glass-card p-10 flex flex-col items-center justify-center text-center gap-6 border-white/5">
-                                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center text-white shadow-lg shadow-black/40`}>
+                            {/* Front Face */}
+                            <div className="absolute inset-0 backface-hidden glass-card p-8 flex flex-col items-center justify-center text-center gap-6 border-white/5">
+                                <div className={`w-20 h-20 rounded-3xl bg-gradient-to-br ${service.color} flex items-center justify-center text-white shadow-2xl shadow-cyan-500/20`}>
                                     {service.icon}
                                 </div>
-                                <h3 className="text-xl font-black text-white font-heading uppercase tracking-tight">{service.title}</h3>
+                                <h3 className="text-2xl font-black text-white font-heading tracking-tight underline decoration-cyan-500/30 underline-offset-8">
+                                    {service.title}
+                                </h3>
+                                <p className="text-gray-500 text-xs font-black uppercase tracking-[0.2em] mt-2">Pasa el cursor para ver más</p>
                             </div>
 
-                            {/* Back */}
-                            <div className="absolute inset-0 backface-hidden rotate-y-180 glass-card p-10 flex flex-col justify-between bg-zinc-900/50 border-cyan-500/20">
-                                <div className="space-y-4">
-                                    <h3 className="text-lg font-black text-cyan-400 font-heading uppercase tracking-tight">{service.title}</h3>
-                                    <p className="text-gray-400 text-sm leading-relaxed">{service.desc}</p>
+                            {/* Back Face */}
+                            <div className="absolute inset-0 backface-hidden rotate-y-180 glass-card p-8 flex flex-col justify-between bg-zinc-900/90 border-cyan-500/40">
+                                <div className="space-y-4 text-left">
+                                    <div className="flex items-center gap-3">
+                                        <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${service.color} flex items-center justify-center text-white scale-75`}>
+                                            {service.icon}
+                                        </div>
+                                        <h3 className="text-sm font-black text-cyan-400 font-heading uppercase tracking-widest">{service.title}</h3>
+                                    </div>
+                                    <p className="text-gray-300 text-sm leading-relaxed font-medium">{service.desc}</p>
                                 </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {service.tags.map((tag, i) => (
-                                        <span key={i} className="px-2 py-1 rounded-md bg-white/5 border border-white/10 text-gray-500 text-[10px] font-bold uppercase tracking-widest">
-                                            {tag}
-                                        </span>
-                                    ))}
+
+                                <div className="space-y-4">
+                                    <div className="flex flex-wrap gap-2">
+                                        {service.tags.map((tag, i) => (
+                                            <span key={i} className="px-2 py-1 rounded-md bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[9px] font-black uppercase tracking-tighter">
+                                                {tag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                    <button className="w-full py-3 bg-white text-black font-black text-[10px] uppercase tracking-widest rounded-xl hover:bg-cyan-400 transition-all active:scale-95">
+                                        Solicitar Presupuesto
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    </motion.div>
+                    </div>
                 ))}
             </div>
 
             <style jsx>{`
-        .perspective-1000 { perspective: 1000px; }
-        .preserve-3d { transform-style: preserve-3d; }
-        .backface-hidden { backface-visibility: hidden; }
-        .rotate-y-180 { transform: rotateY(180deg); }
-      `}</style>
+                .perspective-1000 {
+                    perspective: 1200px;
+                }
+                .preserve-3d {
+                    transform-style: preserve-3d;
+                    position: relative;
+                }
+                .backface-hidden {
+                    backface-visibility: hidden;
+                    -webkit-backface-visibility: hidden;
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                }
+                .rotate-y-180 {
+                    transform: rotateY(180deg);
+                }
+            `}</style>
         </section>
     );
 }

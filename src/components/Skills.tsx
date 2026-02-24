@@ -8,31 +8,32 @@ const skills = [
         items: [
             { name: "n8n / Make / Zapier", level: 98 },
             { name: "Python Automation", level: 95 },
-            { name: "OpenAI / LangChain", level: 92 },
+            { name: "LangChain / OpenAI", level: 92 },
             { name: "Agentic Workflows", level: 90 },
         ]
     },
     {
-        category: "Frontend & Design",
-        icon: "💻",
+        category: "Backend & Cloud",
+        icon: "⚙️",
         items: [
-            { name: "React / Next.js", level: 90 },
-            { name: "TypeScript", level: 92 },
-            { name: "Tailwind CSS", level: 95 },
-            { name: "Framer Motion", level: 88 },
+            { name: "Node.js / Express", level: 92 },
+            { name: "FastAPI / Django", level: 88 },
+            { name: "PostgreSQL / Prisma", level: 90 },
+            { name: "Docker / AWS / VPS", level: 85 },
         ]
     },
     {
-        category: "Backend & DevOps",
-        icon: "⚙️",
+        category: "Frontend & DX",
+        icon: "💻",
         items: [
-            { name: "Node.js / Express", level: 90 },
-            { name: "FastAPI / Django", level: 87 },
-            { name: "Git / GitHub", level: 95 },
-            { name: "Docker / AWS", level: 80 },
+            { name: "Next.js / TypeScript", level: 94 },
+            { name: "Tailwind / Framer", level: 96 },
+            { name: "Git / CI-CD", level: 92 },
+            { name: "UI/UX Optimization", level: 90 },
         ]
     }
 ];
+
 
 export default function Skills() {
     return (

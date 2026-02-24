@@ -3,15 +3,16 @@ import { motion } from 'framer-motion';
 
 export default function HeroSphere() {
     return (
-        <div className="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px] flex items-center justify-center">
+        <div className="relative w-[300px] h-[300px] md:w-[450px] md:h-[450px] flex items-center justify-center [perspective:1000px]">
             {/* Glow Ambient */}
             <div className="absolute inset-0 bg-cyan-500/20 blur-[80px] rounded-full animate-pulse" />
 
             <motion.div
                 animate={{ rotateY: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="relative w-full h-full preserve-3d"
+                className="relative w-full h-full [transform-style:preserve-3d]"
             >
+
                 {/* Sphere Core */}
                 <div className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-400/20 to-blue-600/5 border border-white/20 backdrop-blur-sm" />
 

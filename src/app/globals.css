@@ -1,49 +1,63 @@
 @import "tailwindcss";
 
+@theme {
+    --color-primary: hsl(180, 100%, 50%);
+    --color-nordic-blue: hsl(210, 100%, 70%);
+    --color-nordic-steel: hsl(215, 20%, 65%);
+    --color-background: hsl(240, 10%, 4%);
+    --color-foreground: hsl(0, 0%, 98%);
+
+    --font-sans: var(--font-inter);
+    --font-heading: var(--font-plus-jakarta);
+}
+
 @layer base {
-  :root {
-    --primary: 180 100% 50%;
-    /* Cyan */
-    --secondary: 240 100% 70%;
-    /* Nordic Blue */
-    --background: 240 10% 4%;
-    /* Deep Dark */
-    --foreground: 0 0% 98%;
-  }
+    :root {
+        --background: 240 10% 4%;
+        --foreground: 0 0% 98%;
+        --glass-bg: rgba(255, 255, 255, 0.03);
+        --glass-border: rgba(255, 255, 255, 0.08);
+        --glass-reflection: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
+    }
 
-  html {
-    font-family: var(--font-inter), sans-serif;
-  }
+    body {
+        background: black;
+        color: white;
+        font-family: var(--font-inter), sans-serif;
+    }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  .font-heading {
-    font-family: var(--font-plus-jakarta), sans-serif;
-  }
-}
-
-@theme inline {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --font-sans: var(--font-inter);
-  --font-heading: var(--font-plus-jakarta);
-}
-
-body {
-  background: hsl(var(--background));
-  color: hsl(var(--foreground));
+    h1,
+    h2,
+    h3,
+    h4,
+    .font-heading {
+        font-family: var(--font-plus-jakarta), sans-serif;
+    }
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1.5rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+}
+
+.glass-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--glass-reflection);
+    pointer-events: none;
 }
 
 .text-glow {
-  text-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+    text-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+}
+
+.bg-dot-pattern {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 0);
+    background-size: 40px 40px;
 }

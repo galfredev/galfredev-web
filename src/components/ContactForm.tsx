@@ -1,27 +1,51 @@
 'use client';
 import { sendToN8N } from '@/lib/n8n';
+import { supabase } from '@/lib/supabase';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Send } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Send } from 'lucide-react';
 import { useState } from 'react';
 
 export default function ContactForm() {
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setStatus('loading');
+        setErrorMessage('');
 
-        const formData = new FormData(e.currentTarget);
+        const form = e.currentTarget;
+        const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
 
-        const success = await sendToN8N(data);
+        try {
+            // 1. Save to Supabase
+            const { error: supabaseError } = await supabase
+                .from('contacts')
+                .insert([{
+                    nombre: data.nombre,
+                    email: data.email,
+                    whatsapp: data.whatsapp,
+                    servicio: data.servicio,
+                    deadline: data.deadline,
+                    detalles: data.detalles,
+                    privacidad_aceptada: data.privacidad === 'on'
+                }]);
 
-        if (success) {
+            if (supabaseError) throw new Error('Error saving to database');
+
+            // 2. Sync to n8n for automation
+            const n8nSuccess = await sendToN8N(data);
+
+            // We consider it success even if n8n fails (for the user),
+            // but we could log it. Supabase is our source of truth.
             setStatus('success');
-            (e.target as HTMLFormElement).reset();
-        } else {
+            form.reset();
+        } catch (error: any) {
+            console.error('Submission Error:', error);
             setStatus('error');
-            setTimeout(() => setStatus('idle'), 3000);
+            setErrorMessage(error.message || 'Ocurrió un error inesperado');
+            setTimeout(() => setStatus('idle'), 5000);
         }
     };
 
@@ -128,16 +152,27 @@ export default function ContactForm() {
 
                 <button
                     disabled={status === 'loading'}
-                    className="w-full py-5 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl text-white font-black text-xl hover:shadow-[0_10px_30px_rgba(34,211,238,0.3)] transition-all flex items-center justify-center gap-3 active:scale-[0.98] disabled:opacity-50"
+                    className={`w-full py-5 rounded-2xl text-white font-black text-xl transition-all flex items-center justify-center gap-3 active:scale-[0.98] disabled:opacity-50 ${status === 'success' ? 'bg-green-500 shadow-[0_10px_30px_rgba(34,197,94,0.3)]' :
+                        status === 'error' ? 'bg-red-500 shadow-[0_10px_30px_rgba(239,44,44,0.3)]' :
+                            'bg-gradient-to-r from-cyan-500 to-blue-600 hover:shadow-[0_10px_30px_rgba(34,211,238,0.3)]'
+                        }`}
                 >
                     {status === 'loading' ? (
                         <span className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ) : status === 'success' ? (
-                        <><CheckCircle2 /> Mensaje Enviado</>
+                        <><CheckCircle2 /> ¡Propuesta Enviada!</>
+                    ) : status === 'error' ? (
+                        <><AlertCircle /> Error en el envío</>
                     ) : (
                         <><Send size={20} /> Enviar Propuesta</>
                     )}
                 </button>
+
+                {status === 'error' && (
+                    <p className="text-red-400 text-sm text-center font-medium animate-pulse">
+                        {errorMessage || "Hubo un problema. Por favor, intentá de nuevo."}
+                    </p>
+                )}
             </motion.form>
         </section>
     );

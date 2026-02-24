@@ -53,16 +53,16 @@ export default function AboutMe() {
                 >
                     <div className="space-y-4">
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-400 text-xs font-bold uppercase tracking-widest">
-                            👋 Sobre Mí
+                            👋 Un poco sobre mí
                         </div>
                         <h2 className="text-5xl font-black text-white font-heading tracking-tighter">
                             Hola, soy <span className="text-cyan-400 text-glow italic">Galfre</span>
                         </h2>
                         <p className="text-gray-400 text-lg leading-relaxed">
-                            Ingeniero en Sistemas de Información graduado en la UTN FRC, apasionado por transformar problemas complejos en soluciones elegantes y escalables mediante software de alto impacto.
+                            <strong>Estudiante de Ingeniería en Sistemas de Información en la UTN FRC</strong>, apasionado por el desarrollo de software de alto impacto y la integración de arquitecturas inteligentes.
                         </p>
                         <p className="text-gray-400 text-lg leading-relaxed">
-                            Me especializo en el puente entre la <strong>Inteligencia Artificial</strong> y los negocios reales. Creo sistemas que no solo funcionan, sino que generan impacto medible: menos tiempo, más ingresos, procesos que se ejecutan solos.
+                            Mi objetivo es ayudar a empresas y emprendedores a <strong>escalar mediante la automatización estratégica</strong>. No solo escribo código; diseño sistemas que optimizan procesos, reducen costos operativos y permiten que los equipos se enfoquen en lo que realmente importa: el crecimiento del negocio.
                         </p>
                     </div>
 
@@ -71,16 +71,17 @@ export default function AboutMe() {
                             <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400">🏛️</div>
                             <div>
                                 <span className="block text-xs font-bold text-gray-300">UTN FRC — Ing. Sistemas</span>
-                                <span className="text-[10px] text-cyan-400 uppercase tracking-widest font-black">En Proceso</span>
+                                <span className="text-[10px] text-cyan-400 uppercase tracking-widest font-black">Estudiante Avanzado</span>
                             </div>
                         </div>
                         <div className="flex items-center gap-3 p-4 glass-card border-white/5">
                             <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">💻</div>
                             <div>
-                                <span className="block text-xs font-bold text-gray-300">Backend Dev Career</span>
-                                <span className="text-[10px] text-blue-400 uppercase tracking-widest font-black">En Proceso</span>
+                                <span className="block text-xs font-bold text-gray-300">Especialista en IA & Automatización</span>
+                                <span className="text-[10px] text-blue-400 uppercase tracking-widest font-black">Full Stack Focus</span>
                             </div>
                         </div>
+
                         <div className="flex items-center gap-3 p-4 glass-card border-white/5 sm:col-span-2">
                             <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400">🌎</div>
                             <div>
