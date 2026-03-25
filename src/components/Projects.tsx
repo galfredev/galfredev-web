@@ -21,6 +21,7 @@ export default function Projects() {
                 <a
                     href="https://github.com/galfredev"
                     target="_blank"
+                    rel="noopener noreferrer"
                     className="px-6 py-3 glass-card text-sm font-black text-white hover:bg-white/10 transition-all flex items-center gap-2 uppercase tracking-widest font-heading"
                 >
                     <Github size={18} /> Ver más en GitHub
@@ -76,13 +77,17 @@ export default function Projects() {
 
                             <div className="flex gap-4 pt-8">
                                 <a
-                                    href={project.links.demo}
+                                    href={project.links.demo === '#' ? '#contacto' : project.links.demo}
+                                    target={project.links.demo === '#' ? undefined : '_blank'}
+                                    rel={project.links.demo === '#' ? undefined : 'noopener noreferrer'}
                                     className="flex-1 py-3 glass-card text-center text-xs font-black text-white hover:bg-white/10 transition-all flex items-center justify-center gap-2 uppercase tracking-widest"
                                 >
-                                    <ExternalLink size={14} /> Demo
+                                    <ExternalLink size={14} /> {project.links.demo === '#' ? 'Consultar' : 'Demo'}
                                 </a>
                                 <a
-                                    href={project.links.github}
+                                    href={project.links.github === '#' ? 'https://github.com/galfredev' : project.links.github}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     className="w-12 h-12 glass-card flex items-center justify-center text-gray-400 hover:text-white transition-all"
                                 >
                                     <Github size={18} />

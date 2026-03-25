@@ -99,9 +99,9 @@ export default function Services() {
                                             </span>
                                         ))}
                                     </div>
-                                    <button className="w-full py-3 bg-white text-black font-black text-[10px] uppercase tracking-widest rounded-xl hover:bg-cyan-400 transition-all active:scale-95">
+                                    <a href="#contacto" className="block w-full py-3 bg-white text-black font-black text-[10px] uppercase tracking-widest rounded-xl hover:bg-cyan-400 transition-all active:scale-95 text-center">
                                         Solicitar Presupuesto
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>

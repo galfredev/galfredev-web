@@ -1,11 +1,12 @@
 'use client';
 import { supabase } from '@/lib/supabase';
+import type { User } from '@supabase/supabase-js';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function Header() {
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         const getSession = async () => {
@@ -14,7 +15,7 @@ export default function Header() {
         };
         getSession();
 
-        const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+        const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
             setUser(session?.user ?? null);
         });
 
@@ -38,7 +39,7 @@ export default function Header() {
             </Link>
 
             <nav className="absolute left-1/2 -translate-x-1/2 hidden lg:flex items-center gap-10 text-[10px] font-black text-white/40 font-heading">
-                <Link href="/#sobre-mi" className="hover:text-cyan-400 transition-colors uppercase tracking-[0.2em]">Sobre Mí</Link>
+                <Link href="/#sobre-mi" className="hover:text-cyan-400 transition-colors uppercase tracking-[0.2em]">Sobre Mi</Link>
                 <Link href="/#skills" className="hover:text-cyan-400 transition-colors uppercase tracking-[0.2em]">Skills</Link>
                 <Link href="/#servicios" className="hover:text-cyan-400 transition-colors uppercase tracking-[0.2em]">Servicios</Link>
                 <Link href="/#proyectos" className="hover:text-cyan-400 transition-colors uppercase tracking-[0.2em]">Proyectos</Link>
@@ -48,11 +49,9 @@ export default function Header() {
             <div className="flex items-center gap-4">
                 {user ? (
                     <Link href="/dashboard" className="flex items-center gap-3 glass-card pl-2 pr-4 py-1.5 border-white/10 hover:bg-white/5 transition-all">
-                        <img
-                            src={`https://ui-avatars.com/api/?name=${user.email}&background=06b6d4&color=fff&bold=true`}
-                            className="w-7 h-7 rounded-lg border border-white/10"
-                            alt="Avatar"
-                        />
+                        <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-white/10 bg-cyan-500/15 text-[10px] font-black uppercase text-cyan-300">
+                            {user.email?.slice(0, 2) || 'GD'}
+                        </span>
                         <span className="text-[10px] font-black text-white uppercase tracking-widest hidden sm:inline">Dashboard</span>
                     </Link>
                 ) : (

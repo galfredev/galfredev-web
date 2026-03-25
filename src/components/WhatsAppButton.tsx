@@ -1,23 +1,16 @@
 'use client';
+import { buildWhatsAppUrl } from '@/lib/site';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MessageCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function WhatsAppButton() {
     const [isVisible, setIsVisible] = useState(false);
-
-    // TODO: Reemplazar por número definitivo
-    const phoneNumber = "5493510000000";
-    const message = "¡Hola! Vengo desde tu web y me gustaría hacer una consulta.";
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = buildWhatsAppUrl('Hola, vengo desde la web de GalfreDev y quiero pedir informacion.');
 
     useEffect(() => {
         const toggleVisibility = () => {
-            if (window.scrollY > 300) {
-                setIsVisible(true);
-            } else {
-                setIsVisible(false);
-            }
+            setIsVisible(window.scrollY > 300);
         };
 
         window.addEventListener('scroll', toggleVisibility);

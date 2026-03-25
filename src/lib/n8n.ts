@@ -1,4 +1,6 @@
-export async function sendToN8N(payload: any) {
+import type { ContactFormPayload } from '@/lib/contact';
+
+export async function sendToN8N(payload: ContactFormPayload) {
     const url = process.env.NEXT_PUBLIC_N8N_WEBHOOK_URL || '';
 
     try {
@@ -8,7 +10,7 @@ export async function sendToN8N(payload: any) {
             body: JSON.stringify({
                 ...payload,
                 timestamp: new Date().toISOString(),
-                version: 'v2.0-nextjs'
+                version: 'v2.0-nextjs',
             }),
         });
         return response.ok;

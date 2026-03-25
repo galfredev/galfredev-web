@@ -9,8 +9,6 @@ export default function ROICalculator() {
     const [currency, setCurrency] = useState<'USD' | 'ARS'>('USD');
     const [profile, setProfile] = useState<'admin' | 'jr' | 'sr'>('jr');
 
-    const rates = { USD: 1, ARS: 1250 }; // Blue/CCL rate aproximado
-
     const profiles = {
         admin: { label: 'Administrativo', usd: 12, ars: 15000 },
         jr: { label: 'Junior Dev / Analista', usd: 25, ars: 32000 },
@@ -55,7 +53,7 @@ export default function ROICalculator() {
                                     <button
                                         key={c}
                                         onClick={() => {
-                                            setCurrency(c as any);
+                                            setCurrency(c as 'USD' | 'ARS');
                                             setRate(c === 'USD' ? profiles[profile].usd : profiles[profile].ars);
                                         }}
                                         className={`px-4 py-1.5 rounded-lg text-[10px] font-black transition-all ${currency === c ? 'bg-cyan-500 text-black shadow-[0_0_15px_rgba(34,211,238,0.4)]' : 'text-gray-500 hover:text-white'}`}
@@ -142,6 +140,9 @@ export default function ROICalculator() {
                             <motion.button
                                 whileHover={{ scale: 1.02, boxShadow: '0 20px 40px rgba(34,211,238,0.2)' }}
                                 whileTap={{ scale: 0.98 }}
+                                onClick={() => {
+                                    window.location.href = '#contacto';
+                                }}
                                 className="w-full py-5 bg-white text-black font-black text-sm rounded-2xl flex items-center justify-center gap-3 uppercase tracking-widest font-heading transition-all"
                             >
                                 <Zap size={18} fill="black" /> Dejar de perder dinero

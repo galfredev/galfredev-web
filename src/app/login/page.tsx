@@ -2,36 +2,40 @@
 import { supabase } from '@/lib/supabase';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, LogIn, Mail } from 'lucide-react';
+import Link from 'next/link';
 import { useState } from 'react';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
+    const callbackUrl =
+        typeof window !== 'undefined'
+            ? `${window.location.origin}/auth/callback?next=/dashboard`
+            : '';
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         const { error } = await supabase.auth.signInWithOtp({
             email,
-            options: { emailRedirectTo: `${window.location.origin}/dashboard` }
+            options: { emailRedirectTo: callbackUrl }
         });
         if (error) setMessage(error.message);
-        else setMessage('¡Link enviado! Revisa tu email para entrar.');
+        else setMessage('Link enviado. Revisa tu email para entrar.');
         setLoading(false);
     };
 
     const signInWith = async (provider: 'google' | 'github' | 'linkedin_oidc') => {
         const { error } = await supabase.auth.signInWithOAuth({
             provider,
-            options: { redirectTo: `${window.location.origin}/dashboard` }
+            options: { redirectTo: callbackUrl }
         });
         if (error) alert(error.message);
     };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-black overflow-hidden relative bg-dot-pattern">
-            {/* Background Decor */}
             <div className="absolute top-1/4 left-1/4 w-[600px] h-[600px] bg-cyan-600/10 blur-[150px] rounded-full" />
             <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-blue-600/10 blur-[150px] rounded-full" />
 
@@ -47,7 +51,6 @@ export default function LoginPage() {
                     <p className="text-gray-500 text-[10px] font-black uppercase tracking-[0.3em]">Portal de Clientes</p>
                 </div>
 
-                {/* OAuth Buttons */}
                 <div className="space-y-3 mb-8">
                     <button
                         onClick={() => signInWith('google')}
@@ -83,7 +86,6 @@ export default function LoginPage() {
                     <div className="relative flex justify-center text-[9px] uppercase"><span className="bg-black/20 backdrop-blur-xl px-4 text-gray-600 font-black tracking-[0.3em]">O acceso directo por email</span></div>
                 </div>
 
-                {/* Email Form */}
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div className="space-y-2">
                         <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-1 font-heading">Tu Email</label>
@@ -104,13 +106,13 @@ export default function LoginPage() {
                         disabled={loading}
                         className="w-full py-5 bg-white text-black font-black rounded-2xl hover:bg-cyan-400 transition-all flex items-center justify-center gap-2 uppercase tracking-widest font-heading text-[10px] disabled:opacity-50 active:scale-95"
                     >
-                        {loading ? 'Preparando link...' : <><LogIn size={16} /> Enviar link mágico</>}
+                        {loading ? 'Preparando link...' : <><LogIn size={16} /> Enviar link magico</>}
                     </button>
                     {message && <p className="text-center text-[10px] text-cyan-400 font-black uppercase tracking-tighter animate-pulse">{message}</p>}
                 </form>
 
                 <p className="text-center mt-8 text-[9px] text-gray-600 font-bold uppercase tracking-widest">
-                    ¿Nuevo aquí? <a href="/#contacto" className="text-cyan-500 hover:text-white transition-colors">Inicia un proyecto</a>
+                    Nuevo aqui? <Link href="/#contacto" className="text-cyan-500 hover:text-white transition-colors">Inicia un proyecto</Link>
                 </p>
             </motion.div>
         </div>

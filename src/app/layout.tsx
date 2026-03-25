@@ -1,6 +1,4 @@
 import WhatsAppButton from '@/components/WhatsAppButton';
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from 'next';
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
@@ -16,12 +14,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-    title: 'GalfreDev — IA & Automatización Estratégica para Empresas',
-    description: 'Transformá tu negocio con agentes de IA y workflows inteligentes. Especialista en escalabilidad, ahorro de costos operativos y desarrollo de alto rendimiento.',
-    keywords: ['automatización con IA', 'agentes inteligentes', 'desarrollo de software', 'n8n argentina', 'ahorro de procesos', 'consultoría tech'],
+    title: 'GalfreDev - IA y automatizacion estrategica para empresas',
+    description: 'Transforma tu negocio con agentes de IA, software a medida y automatizaciones que ahorran tiempo operativo.',
+    keywords: ['automatizacion con IA', 'agentes inteligentes', 'desarrollo de software', 'n8n', 'consultoria tech'],
     openGraph: {
-        title: 'GalfreDev — IA & Automatización Estratégica',
-        description: 'Escalá tu empresa en piloto automático con sistemas inteligentes.',
+        title: 'GalfreDev - IA y automatizacion estrategica',
+        description: 'Escala tu empresa con sistemas inteligentes y software a medida.',
         url: 'https://galfre.dev',
         siteName: 'GalfreDev',
         locale: 'es_AR',
@@ -29,11 +27,10 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'GalfreDev — IA & Automatización',
+        title: 'GalfreDev - IA y automatizacion',
         description: 'Automatizando el futuro de las empresas.',
     }
 };
-
 
 export default function RootLayout({
     children,
@@ -45,8 +42,6 @@ export default function RootLayout({
             <body className={`${plusJakarta.variable} ${inter.variable} font-sans antialiased bg-black text-white`}>
                 {children}
                 <WhatsAppButton />
-                <Analytics />
-                <SpeedInsights />
             </body>
         </html>
     );
