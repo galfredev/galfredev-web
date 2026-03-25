@@ -258,7 +258,7 @@ export default function ClientPortal() {
                             </div>
                         </div>
 
-                        <div className="glass-card p-5 border-white/5">
+                        <div className={`glass-card p-5 border-white/5 ${isAdmin ? 'ring-1 ring-cyan-500/20 bg-cyan-500/5' : ''}`}>
                             <div className="flex items-center gap-4">
                                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/10 bg-cyan-500/15 text-sm font-black uppercase text-cyan-300">
                                     {profile?.full_name?.slice(0, 2) || user?.email?.slice(0, 2) || 'GD'}
@@ -293,16 +293,37 @@ export default function ClientPortal() {
                         </div>
                     </div>
 
-                    <button onClick={async () => { await supabase.auth.signOut(); router.push('/login'); }} className="w-full flex items-center gap-3 px-4 py-4 rounded-xl text-red-500 hover:bg-red-500/10 font-black text-xs uppercase tracking-widest transition-all mt-12 border border-transparent hover:border-red-500/20">
+                    <Link href="/auth/signout" className="w-full flex items-center gap-3 px-4 py-4 rounded-xl text-red-500 hover:bg-red-500/10 font-black text-xs uppercase tracking-widest transition-all mt-12 border border-transparent hover:border-red-500/20">
                         <LogOut size={16} /> Cerrar Sesion
-                    </button>
+                    </Link>
                 </aside>
 
                 <main className="flex-1 p-8 md:p-12 overflow-y-auto">
+                    <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                        <Link href="/" className="inline-flex items-center gap-3 text-white hover:text-cyan-400 transition-colors">
+                            <span className="text-2xl font-black tracking-tight font-heading">
+                                Galfre<span className="text-cyan-400">Dev</span>
+                            </span>
+                            <span className="text-[10px] uppercase tracking-[0.25em] font-black text-gray-500">Volver al sitio</span>
+                        </Link>
+                        <div className="flex gap-3">
+                            <button onClick={() => setActiveTab('overview')} className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white hover:border-cyan-500/30 hover:text-cyan-300 transition-all">
+                                Portal Clientes
+                            </button>
+                            <Link href="/#contacto" className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white hover:border-cyan-500/30 hover:text-cyan-300 transition-all">
+                                Ir a contacto
+                            </Link>
+                        </div>
+                    </div>
+
                     <header className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-8 mb-12">
                         <div className="space-y-3">
                             <h2 className="text-4xl md:text-5xl font-black font-heading tracking-tighter">Centro de <span className="text-cyan-400">Clientes</span></h2>
-                            <p className="text-gray-400 max-w-2xl">Pedidos, avances, entregables, CRM y comunicacion unificados en una sola experiencia.</p>
+                            <p className="text-gray-400 max-w-2xl">
+                                {isAdmin
+                                    ? 'Panel interno para gestionar clientes, pedidos, avances y entregables desde una misma base operativa.'
+                                    : 'Tu espacio para ver pedidos, avances, entregables y toda la trazabilidad de los servicios contratados.'}
+                            </p>
                         </div>
                         <div className="flex flex-wrap gap-3">
                             {[

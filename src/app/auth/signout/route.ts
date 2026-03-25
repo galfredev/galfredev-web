@@ -3,10 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
     const requestUrl = new URL(request.url);
-    const code = requestUrl.searchParams.get('code');
-    const next = requestUrl.searchParams.get('next') || '/dashboard';
-
-    const response = NextResponse.redirect(new URL(next, requestUrl.origin));
+    const response = NextResponse.redirect(new URL('/login', requestUrl.origin));
 
     const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL || '',
@@ -38,9 +35,7 @@ export async function GET(request: Request) {
         }
     );
 
-    if (code) {
-        await supabase.auth.exchangeCodeForSession(code);
-    }
+    await supabase.auth.signOut();
 
     return response;
 }
