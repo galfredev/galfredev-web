@@ -1,63 +1,96 @@
 @import "tailwindcss";
 
-@theme {
-    --color-primary: hsl(180, 100%, 50%);
-    --color-nordic-blue: hsl(210, 100%, 70%);
-    --color-nordic-steel: hsl(215, 20%, 65%);
-    --color-background: hsl(240, 10%, 4%);
-    --color-foreground: hsl(0, 0%, 98%);
-
-    --font-sans: var(--font-inter);
-    --font-heading: var(--font-plus-jakarta);
+@theme inline {
+  --font-sans: "Sora", "Sora Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-serif-display: "Instrument Serif", Georgia, serif;
 }
 
-@layer base {
-    :root {
-        --background: 240 10% 4%;
-        --foreground: 0 0% 98%;
-        --glass-bg: rgba(255, 255, 255, 0.03);
-        --glass-border: rgba(255, 255, 255, 0.08);
-        --glass-reflection: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%);
-    }
-
-    body {
-        background: black;
-        color: white;
-        font-family: var(--font-inter), sans-serif;
-    }
-
-    h1,
-    h2,
-    h3,
-    h4,
-    .font-heading {
-        font-family: var(--font-plus-jakarta), sans-serif;
-    }
+:root {
+  --color-background: #050810;
+  --color-foreground: #f5f7fb;
+  --color-muted: rgba(255, 255, 255, 0.62);
+  --color-accent: #1f7f73;
+  --color-accent-strong: #2a9184;
+  --color-warm: #ffb46a;
+  --color-panel: rgba(255, 255, 255, 0.06);
 }
 
-.glass-card {
-    background: var(--glass-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+* {
+  box-sizing: border-box;
 }
 
-.glass-card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: var(--glass-reflection);
-    pointer-events: none;
+html {
+  scroll-behavior: smooth;
 }
 
-.text-glow {
-    text-shadow: 0 0 20px rgba(34, 211, 238, 0.4);
+body {
+  min-height: 100vh;
+  margin: 0;
+  font-family: var(--font-sora), sans-serif;
+  color: var(--color-foreground);
+  background:
+    radial-gradient(circle at top, rgba(31, 127, 115, 0.12), transparent 30%),
+    radial-gradient(circle at 80% 0%, rgba(255, 180, 106, 0.08), transparent 20%),
+    linear-gradient(180deg, #07101d 0%, #050810 32%, #050810 100%);
 }
 
-.bg-dot-pattern {
-    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 0);
-    background-size: 40px 40px;
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.7), transparent 92%);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(31, 127, 115, 0.28);
+  color: white;
+}
+
+.hero-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
+.text-display {
+  font-family: var(--font-instrument-serif), serif;
+}
+
+::-webkit-scrollbar {
+  width: 11px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.24);
 }

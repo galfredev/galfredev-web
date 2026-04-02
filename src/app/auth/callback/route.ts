@@ -1,46 +1,40 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
-import { NextResponse } from 'next/server';
+import { env, hasSupabaseEnv } from '@/lib/env'
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
-    const requestUrl = new URL(request.url);
-    const code = requestUrl.searchParams.get('code');
-    const next = requestUrl.searchParams.get('next') || '/dashboard';
+  const requestUrl = new URL(request.url)
+  const next = requestUrl.searchParams.get('next') || '/perfil'
+  const code = requestUrl.searchParams.get('code')
+  const response = NextResponse.redirect(new URL(next, requestUrl.origin))
 
-    const response = NextResponse.redirect(new URL(next, requestUrl.origin));
+  if (!hasSupabaseEnv() || !code) {
+    return response
+  }
 
-    const supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
-        {
-            cookies: {
-                get(name: string) {
-                    return request.headers
-                        .get('cookie')
-                        ?.split('; ')
-                        .find((cookie) => cookie.startsWith(`${name}=`))
-                        ?.split('=')[1];
-                },
-                set(name: string, value: string, options: CookieOptions) {
-                    response.cookies.set({
-                        name,
-                        value,
-                        ...options,
-                    });
-                },
-                remove(name: string, options: CookieOptions) {
-                    response.cookies.set({
-                        name,
-                        value: '',
-                        ...options,
-                    });
-                },
-            },
-        }
-    );
+  const supabase = createServerClient(
+    env.supabaseUrl,
+    env.supabasePublishableKey,
+    {
+      cookies: {
+        get(name: string) {
+          return request.headers
+            .get('cookie')
+            ?.split('; ')
+            .find((cookie) => cookie.startsWith(`${name}=`))
+            ?.split('=')[1]
+        },
+        set(name: string, value: string, options: CookieOptions) {
+          response.cookies.set({ name, value, ...options })
+        },
+        remove(name: string, options: CookieOptions) {
+          response.cookies.set({ name, value: '', ...options })
+        },
+      },
+    },
+  )
 
-    if (code) {
-        await supabase.auth.exchangeCodeForSession(code);
-    }
+  await supabase.auth.exchangeCodeForSession(code)
 
-    return response;
+  return response
 }

@@ -1,57 +1,60 @@
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import { SiteFooter } from '@/components/layout/site-footer'
+import { SiteHeader } from '@/components/layout/site-header'
 
 export const metadata = {
-    title: "Política de Privacidad | GalfreDev",
-};
+  title: 'Política de privacidad',
+}
 
-export default function PrivacidadPage() {
-    return (
-        <div className="min-h-screen bg-black text-gray-300 py-20 px-6">
-            <div className="max-w-3xl mx-auto space-y-10">
-                <Link href="/" className="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 transition-colors">
-                    <ArrowLeft size={20} />
-                    <span>Volver al inicio</span>
-                </Link>
-
-                <div className="space-y-4">
-                    <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase">Política de <span className="text-cyan-400">Privacidad</span></h1>
-                    <p className="text-gray-500">Última actualización: Febrero 2026</p>
-                </div>
-
-                <div className="space-y-8 glass-card p-8 md:p-12">
-                    <section className="space-y-4">
-                        <h2 className="text-2xl font-bold text-white">1. Información que recopilamos</h2>
-                        <p>Al utilizar nuestro formulario de contacto, recopilamos conscientemente la siguiente información personal:</p>
-                        <ul className="list-disc pl-6 space-y-2 text-gray-400">
-                            <li>Nombre completo</li>
-                            <li>Dirección de correo electrónico</li>
-                            <li>Número de teléfono (WhatsApp)</li>
-                            <li>Información detallada sobre tu proyecto o consulta</li>
-                        </ul>
-                    </section>
-
-                    <section className="space-y-4">
-                        <h2 className="text-2xl font-bold text-white">2. Uso de la información</h2>
-                        <p>Los datos recopilados se utilizan exclusivamente para los siguientes propósitos:</p>
-                        <ul className="list-disc pl-6 space-y-2 text-gray-400">
-                            <li>Responder a tus consultas y evaluar la viabilidad de tu proyecto.</li>
-                            <li>Comunicarnos contigo vía correo electrónico o WhatsApp respecto a nuestros servicios (GalfreDev).</li>
-                            <li>Enviarte propuestas formales de trabajo y cotizaciones.</li>
-                        </ul>
-                    </section>
-
-                    <section className="space-y-4">
-                        <h2 className="text-2xl font-bold text-white">3. Protección de datos</h2>
-                        <p>Tus datos son almacenados de forma segura utilizando bases de datos cifradas y no son compartidos, vendidos ni cedidos a terceros, salvo obligación legal estricta.</p>
-                    </section>
-
-                    <section className="space-y-4">
-                        <h2 className="text-2xl font-bold text-white">4. Tus derechos</h2>
-                        <p>Tienes en todo momento el derecho de acceder, rectificar o solicitar la eliminación de tus datos personales de nuestra base de datos. Para ejercer estos derechos, puedes comunicarte a través de los canales de contacto de nuestro sitio web.</p>
-                    </section>
-                </div>
-            </div>
-        </div>
-    );
+export default function PrivacyPage() {
+  return (
+    <>
+      <SiteHeader />
+      <main className="px-4 pb-18 pt-28 sm:px-6 lg:px-8 lg:pt-32">
+        <article className="mx-auto max-w-4xl rounded-[34px] border border-white/8 bg-white/5 p-6 sm:p-8 lg:p-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-accent)]">
+            Privacidad
+          </p>
+          <h1 className="mt-4 text-4xl font-semibold tracking-[-0.06em] text-white">
+            Política de privacidad
+          </h1>
+          <div className="mt-8 space-y-8 text-sm leading-8 text-white/66">
+            <section>
+              <h2 className="text-lg font-medium text-white">Qué datos se recopilan</h2>
+              <p>
+                GalfreDev puede recopilar nombre, email, WhatsApp, empresa, rubro,
+                necesidad principal, preferencias de contacto y consentimientos
+                cuando una persona completa formularios o crea un perfil.
+              </p>
+            </section>
+            <section>
+              <h2 className="text-lg font-medium text-white">Para qué se usan</h2>
+              <p>
+                Los datos se usan para responder consultas, preparar propuestas,
+                dar seguimiento comercial autorizado, personalizar el contacto y
+                entender mejor el tipo de problema que busca resolver cada visitante.
+              </p>
+            </section>
+            <section>
+              <h2 className="text-lg font-medium text-white">Base técnica y almacenamiento</h2>
+              <p>
+                El sitio utiliza Supabase para autenticación y base de datos. El
+                despliegue está pensado para Vercel. No se exponen claves
+                administrativas en frontend y se separan identidad, perfil,
+                preferencias, leads y consentimientos.
+              </p>
+            </section>
+            <section>
+              <h2 className="text-lg font-medium text-white">Derechos del usuario</h2>
+              <p>
+                Podés solicitar actualización, corrección o eliminación de tus datos
+                escribiendo a galfredev@gmail.com. Si diste consentimiento comercial,
+                también podés retirarlo cuando quieras.
+              </p>
+            </section>
+          </div>
+        </article>
+      </main>
+      <SiteFooter />
+    </>
+  )
 }

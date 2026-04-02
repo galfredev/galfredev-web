@@ -1,6 +1,5 @@
-'use client';
-import ClientPortal from '@/components/ClientPortal';
+import { redirect } from 'next/navigation'
 
 export default function DashboardPage() {
-    return <ClientPortal />;
+  redirect('/perfil')
 }
