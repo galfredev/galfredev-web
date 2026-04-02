@@ -1,8 +1,12 @@
 import { InteractivePanel } from '@/components/motion/interactive-panel'
 import { Reveal } from '@/components/motion/reveal'
+import { getCurrentUserContext } from '@/lib/user-context'
 import Link from 'next/link'
 
-export function ProfileTeaserSection() {
+export async function ProfileTeaserSection() {
+  const userContext = await getCurrentUserContext()
+  const isAuthenticated = Boolean(userContext)
+
   return (
     <section id="perfil" className="px-4 py-18 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
@@ -13,22 +17,28 @@ export function ProfileTeaserSection() {
                 Perfil y seguimiento
               </p>
               <h2 className="max-w-2xl text-3xl font-semibold tracking-[-0.06em] text-white">
-                Un acceso simple para completar perfil, intereses y preferencias de contacto.
+                {isAuthenticated
+                  ? 'Tu perfil quedó integrado al sitio para volver cuando quieras y mantener tu contexto actualizado.'
+                  : 'Un acceso simple para guardar tu contexto y retomar la conversación con mejor diagnóstico.'}
               </h2>
               <p className="max-w-2xl text-sm leading-7 text-white/58">
-                Ideal para quienes quieren dejar su contexto más ordenado y avanzar con una propuesta o seguimiento más alineado a su negocio.
+                {isAuthenticated
+                  ? 'Podés revisar tu información, editarla y actualizar preferencias de contacto o intereses desde el avatar superior o desde tu perfil.'
+                  : 'Ideal para quienes quieren dejar datos útiles sobre su negocio, priorizar necesidades reales y avanzar con una propuesta más alineada.'}
               </p>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
               <Link
-                href="/login"
+                href={isAuthenticated ? '/perfil' : '/login'}
                 className="inline-flex items-center justify-center rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-slate-950"
               >
-                Crear o completar perfil
+                {isAuthenticated ? 'Ver o editar perfil' : 'Crear o completar perfil'}
               </Link>
               <div className="rounded-full border border-white/12 px-4 py-3 text-center text-sm text-white/62">
-                Google · GitHub · LinkedIn · Magic link
+                {isAuthenticated
+                  ? `Sesión activa · ${userContext?.authUser.providerLabel ?? 'Acceso'}`
+                  : 'Google · GitHub · LinkedIn · Magic link'}
               </div>
             </div>
           </InteractivePanel>
