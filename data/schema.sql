@@ -26,8 +26,12 @@ create table if not exists public.profiles (
   email text not null unique,
   full_name text,
   phone text,
-  company_name text
+  company_name text,
+  avatar_url text
 );
+
+alter table public.profiles
+  add column if not exists avatar_url text;
 
 drop trigger if exists trg_profiles_updated_at on public.profiles;
 create trigger trg_profiles_updated_at
@@ -39,11 +43,23 @@ create table if not exists public.user_preferences (
   created_at timestamptz not null default timezone('utc'::text, now()),
   updated_at timestamptz not null default timezone('utc'::text, now()),
   business_type text,
+  business_type_other text,
   team_size text,
+  team_size_other text,
   primary_need text,
+  primary_need_other text,
   interests text[] not null default '{}',
-  preferred_contact_channel text
+  interests_other text,
+  preferred_contact_channel text,
+  preferred_contact_channel_other text
 );
+
+alter table public.user_preferences
+  add column if not exists business_type_other text,
+  add column if not exists team_size_other text,
+  add column if not exists primary_need_other text,
+  add column if not exists interests_other text,
+  add column if not exists preferred_contact_channel_other text;
 
 drop trigger if exists trg_user_preferences_updated_at on public.user_preferences;
 create trigger trg_user_preferences_updated_at

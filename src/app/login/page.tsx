@@ -1,12 +1,20 @@
 import { LoginPanel } from '@/components/auth/login-panel'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { SiteHeader } from '@/components/layout/site-header'
+import { getCurrentUserContext } from '@/lib/user-context'
+import { redirect } from 'next/navigation'
 
 export const metadata = {
   title: 'Acceso',
 }
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  const userContext = await getCurrentUserContext()
+
+  if (userContext) {
+    redirect(userContext.postLoginRedirect)
+  }
+
   return (
     <>
       <SiteHeader />
@@ -14,13 +22,13 @@ export default function LoginPage() {
         <div className="mx-auto grid min-h-[80svh] max-w-7xl items-center gap-10 lg:grid-cols-[0.88fr_1.12fr]">
           <div className="space-y-6">
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-accent)]">
-              Acceso secundario
+              Acceso liviano
             </p>
             <h1 className="max-w-2xl text-balance text-5xl font-semibold tracking-[-0.08em] text-white sm:text-6xl">
-              Perfil simple para guardar contexto, no para desviar la conversión.
+              Ingresá una vez y dejá tu contexto listo para que la próxima conversación vaya más rápido.
             </h1>
             <p className="max-w-xl text-lg leading-8 text-white/60">
-              El objetivo principal del sitio sigue siendo conversar y detectar oportunidades reales. El perfil suma orden, consentimiento y mejor entendimiento del negocio.
+              El perfil sirve para guardar datos básicos, entender mejor tu operación y adaptar diagnósticos o propuestas sin convertir el sitio en un portal complejo.
             </p>
           </div>
 

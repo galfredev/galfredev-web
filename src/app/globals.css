@@ -23,6 +23,11 @@ html {
   scroll-behavior: smooth;
 }
 
+main[id],
+section[id] {
+  scroll-margin-top: 6.75rem;
+}
+
 body {
   min-height: 100vh;
   margin: 0;

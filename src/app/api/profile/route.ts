@@ -1,4 +1,6 @@
+import { isProfileComplete, validateProfileState } from '@/lib/profile'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { getProfileBundleForUser } from '@/lib/user-context'
 import type { ProfileFormState } from '@/types/site'
 import { NextResponse } from 'next/server'
 
@@ -13,11 +15,17 @@ function isProfilePayload(payload: unknown): payload is ProfileFormState {
     typeof candidate.fullName === 'string' &&
     typeof candidate.phone === 'string' &&
     typeof candidate.companyName === 'string' &&
+    typeof candidate.avatarUrl === 'string' &&
     typeof candidate.businessType === 'string' &&
+    typeof candidate.businessTypeOther === 'string' &&
     typeof candidate.teamSize === 'string' &&
+    typeof candidate.teamSizeOther === 'string' &&
     typeof candidate.primaryNeed === 'string' &&
+    typeof candidate.primaryNeedOther === 'string' &&
     Array.isArray(candidate.interests) &&
+    typeof candidate.interestsOther === 'string' &&
     typeof candidate.preferredContactChannel === 'string' &&
+    typeof candidate.preferredContactChannelOther === 'string' &&
     typeof candidate.newsletterOptIn === 'boolean' &&
     typeof candidate.commercialFollowUp === 'boolean' &&
     typeof candidate.profilingConsent === 'boolean'
@@ -43,6 +51,19 @@ export async function POST(request: Request) {
     )
   }
 
+  const validation = validateProfileState(payload)
+
+  if (!validation.isValid) {
+    return NextResponse.json(
+      {
+        ok: false,
+        message: 'Revisá los campos marcados antes de guardar.',
+        errors: validation.errors,
+      },
+      { status: 400 },
+    )
+  }
+
   const supabase = await createSupabaseServerClient()
   const {
     data: { user },
@@ -55,12 +76,18 @@ export async function POST(request: Request) {
     )
   }
 
+  const currentBundle = await getProfileBundleForUser(user.id)
+  const wasComplete = isProfileComplete(currentBundle)
+
+  const { normalized } = validation
+
   const { error: profileError } = await supabase.from('profiles').upsert({
     id: user.id,
     email: user.email ?? '',
-    full_name: payload.fullName.trim() || null,
-    phone: payload.phone.trim() || null,
-    company_name: payload.companyName.trim() || null,
+    full_name: normalized.fullName,
+    phone: normalized.phone,
+    company_name: normalized.companyName,
+    avatar_url: normalized.avatarUrl,
   })
 
   if (profileError) {
@@ -74,11 +101,16 @@ export async function POST(request: Request) {
     .from('user_preferences')
     .upsert({
       user_id: user.id,
-      business_type: payload.businessType || null,
-      team_size: payload.teamSize || null,
-      primary_need: payload.primaryNeed || null,
-      interests: payload.interests,
-      preferred_contact_channel: payload.preferredContactChannel || null,
+      business_type: normalized.businessType,
+      business_type_other: normalized.businessTypeOther,
+      team_size: normalized.teamSize,
+      team_size_other: normalized.teamSizeOther,
+      primary_need: normalized.primaryNeed,
+      primary_need_other: normalized.primaryNeedOther,
+      interests: normalized.interests,
+      interests_other: normalized.interestsOther,
+      preferred_contact_channel: normalized.preferredContactChannel,
+      preferred_contact_channel_other: normalized.preferredContactChannelOther,
     })
 
   if (preferencesError) {
@@ -91,9 +123,9 @@ export async function POST(request: Request) {
   const { error: consentError } = await supabase.from('marketing_consents').upsert(
     {
       user_id: user.id,
-      newsletter_opt_in: payload.newsletterOptIn,
-      commercial_follow_up: payload.commercialFollowUp,
-      profiling_opt_in: payload.profilingConsent,
+      newsletter_opt_in: normalized.newsletterOptIn,
+      commercial_follow_up: normalized.commercialFollowUp,
+      profiling_opt_in: normalized.profilingConsent,
       privacy_policy_accepted: true,
       source: 'profile',
     },
@@ -111,6 +143,9 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     ok: true,
-    message: 'Perfil actualizado correctamente.',
+    message: wasComplete
+      ? 'Perfil actualizado correctamente.'
+      : 'Perfil completado correctamente.',
+    redirectTo: '/?profile=updated',
   })
 }

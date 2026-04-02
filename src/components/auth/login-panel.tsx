@@ -9,13 +9,15 @@ type OAuthProvider = 'google' | 'github' | 'linkedin_oidc'
 
 export function LoginPanel() {
   const [email, setEmail] = useState('')
-  const [status, setStatus] = useState<'idle' | 'loading' | 'error' | 'success'>('idle')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'error' | 'success'>(
+    'idle',
+  )
   const [message, setMessage] = useState('')
 
   const redirectTo =
     typeof window !== 'undefined'
-      ? `${window.location.origin}/auth/callback?next=/perfil`
-      : `${env.siteUrl}/auth/callback?next=/perfil`
+      ? `${window.location.origin}/auth/callback`
+      : `${env.siteUrl}/auth/callback`
 
   async function handleMagicLink(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -43,7 +45,7 @@ export function LoginPanel() {
     }
 
     setStatus('success')
-    setMessage('Te envié un magic link para entrar a tu perfil.')
+    setMessage('Te enviamos un magic link para continuar con tu perfil.')
   }
 
   async function handleOAuth(provider: OAuthProvider) {
@@ -77,8 +79,8 @@ export function LoginPanel() {
           Ingresá a tu perfil
         </h1>
         <p className="text-sm leading-7 text-white/58">
-          El acceso sirve para guardar tu contexto, preferencias y consentimiento,
-          sin convertir el sitio en un portal pesado.
+          Guardá contexto, preferencias y consentimiento para que el diagnóstico
+          y el seguimiento sean más claros desde la primera conversación.
         </p>
       </div>
 
