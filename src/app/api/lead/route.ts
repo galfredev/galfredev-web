@@ -1,41 +1,13 @@
+import {
+  buildLeadWhatsAppMessage,
+  validateLeadForm,
+  validateLeadPayload,
+} from '@/lib/contact'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { buildWhatsAppUrl } from '@/lib/whatsapp'
 import { NextResponse } from 'next/server'
 
-type LeadPayload = {
-  fullName: string
-  email: string
-  phone?: string
-  companyName?: string
-  businessType?: string
-  primaryNeed: string
-  challenge: string
-  consentFollowUp: boolean
-  consentNewsletter: boolean
-  consentPrivacy: boolean
-  website?: string
-  elapsedMs: number
-  source?: string
-}
-
-function isLeadPayload(payload: unknown): payload is LeadPayload {
-  if (!payload || typeof payload !== 'object') {
-    return false
-  }
-
-  const candidate = payload as Record<string, unknown>
-
-  return (
-    typeof candidate.fullName === 'string' &&
-    typeof candidate.email === 'string' &&
-    typeof candidate.primaryNeed === 'string' &&
-    typeof candidate.challenge === 'string' &&
-    typeof candidate.consentFollowUp === 'boolean' &&
-    typeof candidate.consentNewsletter === 'boolean' &&
-    typeof candidate.consentPrivacy === 'boolean' &&
-    typeof candidate.elapsedMs === 'number'
-  )
-}
+export const runtime = 'nodejs'
 
 export async function POST(request: Request) {
   let payload: unknown
@@ -49,37 +21,25 @@ export async function POST(request: Request) {
     )
   }
 
-  if (!isLeadPayload(payload)) {
+  if (!validateLeadPayload(payload)) {
     return NextResponse.json(
       { ok: false, message: 'Los datos enviados no tienen el formato esperado.' },
       { status: 400 },
     )
   }
 
-  if (payload.website?.trim()) {
+  if (payload.website.trim()) {
     return NextResponse.json({ ok: true, message: 'Solicitud recibida.' })
   }
 
-  const fullName = payload.fullName.trim()
-  const email = payload.email.trim().toLowerCase()
-  const challenge = payload.challenge.trim()
+  const validation = validateLeadForm(payload)
 
-  if (!fullName || !email || !payload.primaryNeed || challenge.length < 24) {
+  if (!validation.isValid) {
     return NextResponse.json(
       {
         ok: false,
-        message:
-          'Completá nombre, email, necesidad principal y un poco más de contexto.',
-      },
-      { status: 400 },
-    )
-  }
-
-  if (!payload.consentPrivacy) {
-    return NextResponse.json(
-      {
-        ok: false,
-        message: 'Necesito consentimiento de privacidad para guardar la consulta.',
+        message: 'Revisa los campos marcados antes de enviar la consulta.',
+        errors: validation.errors,
       },
       { status: 400 },
     )
@@ -89,16 +49,8 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ok: false,
-        message: 'La solicitud fue demasiado rápida. Probá de nuevo en unos segundos.',
+        message: 'La solicitud fue demasiado rapida. Proba de nuevo en unos segundos.',
       },
-      { status: 400 },
-    )
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(email)) {
-    return NextResponse.json(
-      { ok: false, message: 'Ingresá un email válido.' },
       { status: 400 },
     )
   }
@@ -108,24 +60,33 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const { data: lead, error: leadError } = await supabase
-    .from('lead_intake')
-    .insert({
-      user_id: user?.id ?? null,
-      full_name: fullName,
-      email,
-      phone: payload.phone?.trim() || null,
-      company_name: payload.companyName?.trim() || null,
-      business_type: payload.businessType?.trim() || null,
-      primary_need: payload.primaryNeed,
-      challenge,
-      status: 'new',
-      source: payload.source ?? 'website',
-    })
-    .select('id')
-    .single<{ id: string }>()
+  const source = payload.source?.trim() || 'website-contact-section'
+  const leadId = crypto.randomUUID()
+  const { normalized } = validation
 
-  if (leadError || !lead) {
+  const { error: leadError } = await supabase.from('lead_intake').insert({
+    id: leadId,
+    user_id: user?.id ?? null,
+    full_name: normalized.fullName,
+    email: normalized.email,
+    phone: normalized.phone,
+    company_name: normalized.companyName || null,
+    business_type: normalized.businessType || null,
+    primary_need: normalized.primaryNeed,
+    challenge: normalized.challenge,
+    status: 'new',
+    source,
+  })
+
+  if (leadError) {
+    console.error('Lead intake insert failed', {
+      code: leadError.code,
+      details: leadError.details,
+      hint: leadError.hint,
+      message: leadError.message,
+      source,
+    })
+
     return NextResponse.json(
       {
         ok: false,
@@ -136,41 +97,36 @@ export async function POST(request: Request) {
   }
 
   const { error: consentError } = await supabase.from('marketing_consents').insert({
-    lead_id: lead.id,
-    newsletter_opt_in: payload.consentNewsletter,
-    commercial_follow_up: payload.consentFollowUp,
+    lead_id: leadId,
+    newsletter_opt_in: normalized.consentNewsletter,
+    commercial_follow_up: normalized.consentFollowUp,
     profiling_opt_in: false,
-    privacy_policy_accepted: payload.consentPrivacy,
-    source: payload.source ?? 'website',
+    privacy_policy_accepted: normalized.consentPrivacy,
+    source,
   })
 
   if (consentError) {
+    console.error('Marketing consent insert failed', {
+      code: consentError.code,
+      details: consentError.details,
+      hint: consentError.hint,
+      message: consentError.message,
+      source,
+    })
+
     return NextResponse.json(
       {
         ok: false,
-        message: 'La consulta entró, pero falló el registro de consentimiento.',
+        message:
+          'La consulta se guardo, pero no pudimos registrar el consentimiento correctamente.',
       },
       { status: 500 },
     )
   }
 
-  const whatsappMessage = [
-    'Hola, vengo desde la nueva web de GalfreDev.',
-    `Nombre: ${fullName}`,
-    `Email: ${email}`,
-    payload.phone ? `WhatsApp: ${payload.phone.trim()}` : '',
-    payload.companyName ? `Empresa: ${payload.companyName.trim()}` : '',
-    payload.businessType ? `Rubro: ${payload.businessType.trim()}` : '',
-    `Necesidad principal: ${payload.primaryNeed}`,
-    `Contexto: ${challenge}`,
-  ]
-    .filter(Boolean)
-    .join('\n')
-
   return NextResponse.json({
     ok: true,
-    message:
-      'Tu consulta quedó registrada. Si querés, seguí la conversación ahora por WhatsApp.',
-    whatsappUrl: buildWhatsAppUrl(whatsappMessage),
+    message: 'Tu consulta quedo registrada. Te llevamos a WhatsApp para continuar.',
+    whatsappUrl: buildWhatsAppUrl(buildLeadWhatsAppMessage(normalized)),
   })
 }
