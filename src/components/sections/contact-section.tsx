@@ -1,42 +1,84 @@
 'use client'
 
 import { Reveal } from '@/components/motion/reveal'
+import {
+  ConsentCheckboxCard,
+  SelectField,
+  TextAreaField,
+  TextInputField,
+} from '@/components/ui/contact-form-fields'
 import { SectionHeading } from '@/components/ui/section-heading'
+import {
+  type LeadApiResponse,
+  type LeadFieldErrors,
+  buildDraftWhatsAppMessage,
+  createInitialLeadFormState,
+  leadPrimaryNeedOptions,
+  type LeadStatus,
+  validateLeadForm,
+} from '@/lib/contact'
 import { buildWhatsAppUrl } from '@/lib/whatsapp'
 import { ArrowRight } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
-type LeadStatus = 'idle' | 'loading' | 'success' | 'error'
-
-const initialForm = {
-  fullName: '',
-  email: '',
-  phone: '',
-  companyName: '',
-  businessType: '',
-  primaryNeed: '',
-  challenge: '',
-  consentFollowUp: true,
-  consentNewsletter: false,
-  consentPrivacy: false,
-  website: '',
-}
+type LeadFormState = ReturnType<typeof createInitialLeadFormState>
 
 export function ContactSection() {
-  const [form, setForm] = useState(initialForm)
+  const [form, setForm] = useState<LeadFormState>(createInitialLeadFormState)
   const [status, setStatus] = useState<LeadStatus>('idle')
   const [message, setMessage] = useState('')
   const [whatsAppHref, setWhatsAppHref] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<LeadFieldErrors>({})
   const startTimeRef = useRef<number>(0)
 
   useEffect(() => {
     startTimeRef.current = Date.now()
   }, [])
 
+  useEffect(() => {
+    if (status !== 'success' || !whatsAppHref) {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      window.location.assign(whatsAppHref)
+    }, 900)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [status, whatsAppHref])
+
+  function updateField<K extends keyof LeadFormState>(
+    key: K,
+    value: LeadFormState[K],
+  ) {
+    setForm((current) => ({ ...current, [key]: value }))
+    setFieldErrors((current) => ({ ...current, [key]: undefined }))
+
+    if (status !== 'idle') {
+      setStatus('idle')
+      setMessage('')
+    }
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+
+    if (status === 'loading') {
+      return
+    }
+
+    const validation = validateLeadForm(form)
+
+    if (!validation.isValid) {
+      setFieldErrors(validation.errors)
+      setStatus('error')
+      setMessage('Revisa los campos marcados antes de enviar la consulta.')
+      return
+    }
+
     setStatus('loading')
     setMessage('')
+    setFieldErrors({})
 
     try {
       const response = await fetch('/api/lead', {
@@ -51,28 +93,30 @@ export function ContactSection() {
         }),
       })
 
-      const result = (await response.json()) as {
-        ok: boolean
-        message: string
-        whatsappUrl?: string
-      }
+      const result = (await response.json()) as LeadApiResponse
 
       if (!response.ok || !result.ok) {
         setStatus('error')
         setMessage(result.message)
+        setFieldErrors(result.errors ?? {})
         return
       }
 
       setStatus('success')
       setMessage(result.message)
       setWhatsAppHref(result.whatsappUrl ?? '')
-      setForm(initialForm)
+      setFieldErrors({})
+      setForm(createInitialLeadFormState())
       startTimeRef.current = Date.now()
     } catch {
       setStatus('error')
-      setMessage('No se pudo enviar el pedido. Probá de nuevo o escribime por WhatsApp.')
+      setMessage(
+        'No pudimos enviar tu consulta por un problema de conexion. Proba de nuevo o escribinos por WhatsApp.',
+      )
     }
   }
+
+  const directWhatsAppHref = buildWhatsAppUrl(buildDraftWhatsAppMessage(form))
 
   return (
     <section id="contacto" className="px-4 py-22 sm:px-6 lg:px-8">
@@ -80,8 +124,8 @@ export function ContactSection() {
         <Reveal>
           <SectionHeading
             eyebrow="Contacto"
-            title="Si querés ordenar, automatizar o escalar, lo seguimos por WhatsApp."
-            description="La web resuelve el primer paso: mostrar qué hace GalfreDev, darte contexto y permitirte pedir diagnóstico o propuesta de forma clara. El cierre ideal es una conversación real."
+            title="Si queres ordenar, automatizar o escalar, lo seguimos por WhatsApp."
+            description="La web resuelve el primer paso: mostrar que hace GalfreDev, darte contexto y permitirte pedir diagnostico o propuesta de forma clara. El cierre ideal es una conversacion real."
           />
 
           <div className="mt-8 space-y-4">
@@ -97,187 +141,120 @@ export function ContactSection() {
               <ArrowRight size={16} />
             </a>
             <p className="max-w-md text-sm leading-7 text-white/56">
-              También podés dejar tus datos y la necesidad principal para que el
-              contacto salga con mejor contexto y con consentimiento explícito.
+              Tambien podes dejar tus datos y la necesidad principal para que el
+              contacto salga con mejor contexto y con consentimiento explicito.
             </p>
           </div>
         </Reveal>
 
         <Reveal delay={0.06}>
           <form
+            noValidate
             onSubmit={handleSubmit}
-            className="rounded-[34px] border border-white/8 bg-white/5 p-6 sm:p-8"
+            className="rounded-[34px] border border-white/8 bg-[rgba(8,12,20,0.84)] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.28)] backdrop-blur-xl sm:p-8"
           >
             <div className="grid gap-4 md:grid-cols-2">
-              <label className="grid gap-2 text-sm text-white/72">
-                Nombre y apellido
-                <input
-                  required
-                  value={form.fullName}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      fullName: event.target.value,
-                    }))
-                  }
-                  className="rounded-2xl border border-white/10 bg-black/18 px-4 py-3 text-white outline-none transition focus:border-[var(--color-accent)]/32"
-                />
-              </label>
-              <label className="grid gap-2 text-sm text-white/72">
-                Email
-                <input
-                  required
-                  type="email"
-                  value={form.email}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      email: event.target.value,
-                    }))
-                  }
-                  className="rounded-2xl border border-white/10 bg-black/18 px-4 py-3 text-white outline-none transition focus:border-[var(--color-accent)]/32"
-                />
-              </label>
-              <label className="grid gap-2 text-sm text-white/72">
-                WhatsApp
-                <input
-                  value={form.phone}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      phone: event.target.value,
-                    }))
-                  }
-                  className="rounded-2xl border border-white/10 bg-black/18 px-4 py-3 text-white outline-none transition focus:border-[var(--color-accent)]/32"
-                />
-              </label>
-              <label className="grid gap-2 text-sm text-white/72">
-                Negocio o empresa
-                <input
-                  value={form.companyName}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      companyName: event.target.value,
-                    }))
-                  }
-                  className="rounded-2xl border border-white/10 bg-black/18 px-4 py-3 text-white outline-none transition focus:border-[var(--color-accent)]/32"
-                />
-              </label>
+              <TextInputField
+                required
+                label="Nombre y apellido"
+                value={form.fullName}
+                error={fieldErrors.fullName}
+                placeholder="Como te llamas"
+                disabled={status === 'loading'}
+                onChange={(event) => updateField('fullName', event.target.value)}
+              />
+              <TextInputField
+                required
+                type="email"
+                label="Email"
+                value={form.email}
+                error={fieldErrors.email}
+                placeholder="tu@email.com"
+                disabled={status === 'loading'}
+                onChange={(event) => updateField('email', event.target.value)}
+              />
+              <TextInputField
+                required
+                label="WhatsApp"
+                value={form.phone}
+                error={fieldErrors.phone}
+                helper="Lo usamos para continuar el lead sin friccion."
+                placeholder="+54 9 351..."
+                disabled={status === 'loading'}
+                onChange={(event) => updateField('phone', event.target.value)}
+              />
+              <TextInputField
+                label="Negocio o empresa"
+                value={form.companyName}
+                placeholder="Nombre del negocio o marca"
+                disabled={status === 'loading'}
+                onChange={(event) => updateField('companyName', event.target.value)}
+              />
             </div>
 
             <div className="mt-4 grid gap-4 md:grid-cols-2">
-              <label className="grid gap-2 text-sm text-white/72">
-                Rubro
-                <input
-                  value={form.businessType}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      businessType: event.target.value,
-                    }))
-                  }
-                  className="rounded-2xl border border-white/10 bg-black/18 px-4 py-3 text-white outline-none transition focus:border-[var(--color-accent)]/32"
-                />
-              </label>
-              <label className="grid gap-2 text-sm text-white/72">
-                Necesidad principal
-                <select
-                  required
-                  value={form.primaryNeed}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      primaryNeed: event.target.value,
-                    }))
-                  }
-                  className="rounded-2xl border border-white/10 bg-black/18 px-4 py-3 text-white outline-none transition focus:border-[var(--color-accent)]/32"
-                >
-                  <option value="">Elegí una opción</option>
-                  <option value="whatsapp">WhatsApp y captación</option>
-                  <option value="seguimiento">Seguimiento comercial</option>
-                  <option value="turnos">Turnos y recordatorios</option>
-                  <option value="cobranzas">Cobranzas y avisos</option>
-                  <option value="automatizacion-interna">Automatización interna</option>
-                  <option value="software-a-medida">Software a medida</option>
-                </select>
-              </label>
+              <TextInputField
+                label="Rubro"
+                value={form.businessType}
+                placeholder="Diseno, salud, servicios, ecommerce..."
+                disabled={status === 'loading'}
+                onChange={(event) => updateField('businessType', event.target.value)}
+              />
+              <SelectField
+                label="Necesidad principal"
+                value={form.primaryNeed}
+                options={leadPrimaryNeedOptions}
+                placeholder="Elegi una opcion"
+                error={fieldErrors.primaryNeed}
+                disabled={status === 'loading'}
+                onChange={(value) => updateField('primaryNeed', value)}
+              />
             </div>
 
-            <label className="mt-4 grid gap-2 text-sm text-white/72">
-              Contame el contexto
-              <textarea
+            <div className="mt-4">
+              <TextAreaField
                 required
                 rows={5}
+                label="Contame el contexto"
                 value={form.challenge}
-                onChange={(event) =>
-                  setForm((current) => ({
-                    ...current,
-                    challenge: event.target.value,
-                  }))
-                }
-                className="rounded-[22px] border border-white/10 bg-black/18 px-4 py-3 text-white outline-none transition focus:border-[var(--color-accent)]/32"
+                error={fieldErrors.challenge}
+                helper="Cuanto mas claro sea el contexto, mejor preparado sale el mensaje para WhatsApp."
+                placeholder="Que pasa hoy, que queres ordenar y que resultado esperas."
+                disabled={status === 'loading'}
+                onChange={(event) => updateField('challenge', event.target.value)}
               />
-            </label>
+            </div>
 
             <input
               value={form.website}
-              onChange={(event) =>
-                setForm((current) => ({
-                  ...current,
-                  website: event.target.value,
-                }))
-              }
+              onChange={(event) => updateField('website', event.target.value)}
               tabIndex={-1}
               autoComplete="off"
               aria-hidden="true"
               className="sr-only"
             />
 
-            <div className="mt-5 grid gap-3 rounded-[24px] border border-white/8 bg-black/16 p-4 text-sm text-white/72">
-              <label className="flex items-start gap-3">
-                <input
-                  type="checkbox"
-                  checked={form.consentFollowUp}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      consentFollowUp: event.target.checked,
-                    }))
-                  }
-                  className="mt-1 accent-[var(--color-accent)]"
-                />
-                Autorizo seguimiento comercial por email o WhatsApp.
-              </label>
-              <label className="flex items-start gap-3">
-                <input
-                  type="checkbox"
-                  checked={form.consentNewsletter}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      consentNewsletter: event.target.checked,
-                    }))
-                  }
-                  className="mt-1 accent-[var(--color-accent)]"
-                />
-                Quiero recibir novedades sobre automatización, software e IA aplicada.
-              </label>
-              <label className="flex items-start gap-3">
-                <input
-                  required
-                  type="checkbox"
-                  checked={form.consentPrivacy}
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      consentPrivacy: event.target.checked,
-                    }))
-                  }
-                  className="mt-1 accent-[var(--color-accent)]"
-                />
-                Acepto la política de privacidad y el tratamiento de mis datos para este contacto.
-              </label>
+            <div className="mt-5 grid gap-3 rounded-[26px] border border-white/8 bg-white/[0.03] p-4">
+              <ConsentCheckboxCard
+                checked={form.consentFollowUp}
+                disabled={status === 'loading'}
+                label="Autorizo seguimiento comercial por email o WhatsApp."
+                onChange={(checked) => updateField('consentFollowUp', checked)}
+              />
+              <ConsentCheckboxCard
+                checked={form.consentNewsletter}
+                disabled={status === 'loading'}
+                label="Quiero recibir novedades sobre automatizacion, software e IA aplicada."
+                onChange={(checked) => updateField('consentNewsletter', checked)}
+              />
+              <ConsentCheckboxCard
+                required
+                checked={form.consentPrivacy}
+                disabled={status === 'loading'}
+                error={fieldErrors.consentPrivacy}
+                label="Acepto la politica de privacidad y el tratamiento de mis datos para este contacto."
+                onChange={(checked) => updateField('consentPrivacy', checked)}
+              />
             </div>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -286,12 +263,10 @@ export function ContactSection() {
                 disabled={status === 'loading'}
                 className="rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-slate-950 transition hover:bg-[var(--color-accent-strong)] disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {status === 'loading' ? 'Enviando...' : 'Pedir propuesta o diagnóstico'}
+                {status === 'loading' ? 'Enviando...' : 'Pedir propuesta o diagnostico'}
               </button>
               <a
-                href={buildWhatsAppUrl(
-                  'Hola, quiero consultar por los servicios de GalfreDev.',
-                )}
+                href={directWhatsAppHref}
                 target="_blank"
                 rel="noreferrer"
                 className="rounded-full border border-white/12 px-5 py-3 text-sm text-white/82 transition hover:border-white/24 hover:text-white"
@@ -317,7 +292,7 @@ export function ContactSection() {
                     rel="noreferrer"
                     className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-white underline underline-offset-4"
                   >
-                    Continuar por WhatsApp
+                    Continuar por WhatsApp ahora
                     <ArrowRight size={16} />
                   </a>
                 ) : null}
