@@ -1,3 +1,4 @@
+import { hasSupabaseEnv } from '@/lib/env'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import {
   createProfileState,
@@ -38,7 +39,7 @@ function getProviderLabel(provider: string | undefined) {
   if (provider === 'google') return 'Google'
   if (provider === 'github') return 'GitHub'
   if (provider === 'linkedin_oidc') return 'LinkedIn'
-  return 'Magic link'
+  return 'Enlace mágico'
 }
 
 function getProviderAvatar(user: User) {
@@ -54,6 +55,28 @@ function getProviderAvatar(user: User) {
 }
 
 export async function getProfileBundleForUser(userId: string) {
+  if (!hasSupabaseEnv()) {
+    return {
+      fullName: null,
+      phone: null,
+      companyName: null,
+      avatarUrl: null,
+      businessType: null,
+      businessTypeOther: null,
+      teamSize: null,
+      teamSizeOther: null,
+      primaryNeed: null,
+      primaryNeedOther: null,
+      interests: [],
+      interestsOther: null,
+      preferredContactChannel: null,
+      preferredContactChannelOther: null,
+      newsletterOptIn: false,
+      commercialFollowUp: true,
+      profilingConsent: false,
+    } satisfies ProfileBundle
+  }
+
   const supabase = await createSupabaseServerClient()
 
   const [{ data: profile }, { data: preferences }, { data: consent }] =
@@ -115,6 +138,10 @@ export async function getProfileBundleForUser(userId: string) {
 }
 
 export async function getCurrentUserContext() {
+  if (!hasSupabaseEnv()) {
+    return null
+  }
+
   const supabase = await createSupabaseServerClient()
   const {
     data: { user },

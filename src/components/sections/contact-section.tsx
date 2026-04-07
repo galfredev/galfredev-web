@@ -1,5 +1,6 @@
 'use client'
 
+import { BlurHighlight } from '@/components/motion/blur-highlight'
 import { Reveal } from '@/components/motion/reveal'
 import {
   ConsentCheckboxCard,
@@ -17,6 +18,7 @@ import {
   type LeadStatus,
   validateLeadForm,
 } from '@/lib/contact'
+import { CONTACT_FORM_SOURCE } from '@/lib/lead-model'
 import { buildWhatsAppUrl } from '@/lib/whatsapp'
 import { ArrowRight } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
@@ -72,7 +74,7 @@ export function ContactSection() {
     if (!validation.isValid) {
       setFieldErrors(validation.errors)
       setStatus('error')
-      setMessage('Revisa los campos marcados antes de enviar la consulta.')
+      setMessage('Revisá los campos marcados antes de enviar la consulta.')
       return
     }
 
@@ -89,7 +91,7 @@ export function ContactSection() {
         body: JSON.stringify({
           ...form,
           elapsedMs: Date.now() - startTimeRef.current,
-          source: 'website-contact-section',
+          source: CONTACT_FORM_SOURCE,
         }),
       })
 
@@ -111,7 +113,7 @@ export function ContactSection() {
     } catch {
       setStatus('error')
       setMessage(
-        'No pudimos enviar tu consulta por un problema de conexion. Proba de nuevo o escribinos por WhatsApp.',
+        'No pudimos enviar tu consulta por un problema de conexión. Probá de nuevo o escribinos por WhatsApp.',
       )
     }
   }
@@ -124,9 +126,22 @@ export function ContactSection() {
         <Reveal>
           <SectionHeading
             eyebrow="Contacto"
-            title="Si queres ordenar, automatizar o escalar, lo seguimos por WhatsApp."
-            description="La web resuelve el primer paso: mostrar que hace GalfreDev, darte contexto y permitirte pedir diagnostico o propuesta de forma clara. El cierre ideal es una conversacion real."
+            title="Si querés ordenar, automatizar o escalar, lo seguimos por WhatsApp."
+            description=""
           />
+
+          <p className="mt-5 max-w-2xl text-pretty text-base leading-7 text-white/66 sm:text-lg">
+            <BlurHighlight
+              text="La web resuelve el primer paso: mostrar qué hace GalfreDev, darte contexto y permitirte pedir un diagnóstico o una propuesta de forma clara. El cierre ideal es una conversación real."
+              highlightWords={[
+                'GalfreDev',
+                'contexto',
+                'diagnóstico',
+                'propuesta',
+                'conversación',
+              ]}
+            />
+          </p>
 
           <div className="mt-8 space-y-4">
             <a
@@ -141,8 +156,7 @@ export function ContactSection() {
               <ArrowRight size={16} />
             </a>
             <p className="max-w-md text-sm leading-7 text-white/56">
-              Tambien podes dejar tus datos y la necesidad principal para que el
-              contacto salga con mejor contexto y con consentimiento explicito.
+              También podés dejar tus datos y la necesidad principal para que el contacto salga con mejor contexto, prioridad y consentimiento explícito.
             </p>
           </div>
         </Reveal>
@@ -159,7 +173,8 @@ export function ContactSection() {
                 label="Nombre y apellido"
                 value={form.fullName}
                 error={fieldErrors.fullName}
-                placeholder="Como te llamas"
+                placeholder="Cómo te llamás"
+                autoComplete="name"
                 disabled={status === 'loading'}
                 onChange={(event) => updateField('fullName', event.target.value)}
               />
@@ -170,16 +185,20 @@ export function ContactSection() {
                 value={form.email}
                 error={fieldErrors.email}
                 placeholder="tu@email.com"
+                autoComplete="email"
                 disabled={status === 'loading'}
                 onChange={(event) => updateField('email', event.target.value)}
               />
               <TextInputField
                 required
+                type="tel"
+                inputMode="tel"
                 label="WhatsApp"
                 value={form.phone}
                 error={fieldErrors.phone}
-                helper="Lo usamos para continuar el lead sin friccion."
+                helper="Lo usamos para continuar el lead sin fricción."
                 placeholder="+54 9 351..."
+                autoComplete="tel"
                 disabled={status === 'loading'}
                 onChange={(event) => updateField('phone', event.target.value)}
               />
@@ -187,6 +206,7 @@ export function ContactSection() {
                 label="Negocio o empresa"
                 value={form.companyName}
                 placeholder="Nombre del negocio o marca"
+                autoComplete="organization"
                 disabled={status === 'loading'}
                 onChange={(event) => updateField('companyName', event.target.value)}
               />
@@ -196,7 +216,8 @@ export function ContactSection() {
               <TextInputField
                 label="Rubro"
                 value={form.businessType}
-                placeholder="Diseno, salud, servicios, ecommerce..."
+                placeholder="Diseño, salud, servicios, e-commerce..."
+                autoComplete="organization-title"
                 disabled={status === 'loading'}
                 onChange={(event) => updateField('businessType', event.target.value)}
               />
@@ -204,7 +225,7 @@ export function ContactSection() {
                 label="Necesidad principal"
                 value={form.primaryNeed}
                 options={leadPrimaryNeedOptions}
-                placeholder="Elegi una opcion"
+                placeholder="Elegí una opción"
                 error={fieldErrors.primaryNeed}
                 disabled={status === 'loading'}
                 onChange={(value) => updateField('primaryNeed', value)}
@@ -218,8 +239,8 @@ export function ContactSection() {
                 label="Contame el contexto"
                 value={form.challenge}
                 error={fieldErrors.challenge}
-                helper="Cuanto mas claro sea el contexto, mejor preparado sale el mensaje para WhatsApp."
-                placeholder="Que pasa hoy, que queres ordenar y que resultado esperas."
+                helper="Cuanto más claro sea el contexto, mejor preparado sale el mensaje para WhatsApp."
+                placeholder="Qué pasa hoy, qué querés ordenar y qué resultado esperás."
                 disabled={status === 'loading'}
                 onChange={(event) => updateField('challenge', event.target.value)}
               />
@@ -244,7 +265,7 @@ export function ContactSection() {
               <ConsentCheckboxCard
                 checked={form.consentNewsletter}
                 disabled={status === 'loading'}
-                label="Quiero recibir novedades sobre automatizacion, software e IA aplicada."
+                label="Quiero recibir novedades sobre automatización, software e IA aplicada."
                 onChange={(checked) => updateField('consentNewsletter', checked)}
               />
               <ConsentCheckboxCard
@@ -252,7 +273,7 @@ export function ContactSection() {
                 checked={form.consentPrivacy}
                 disabled={status === 'loading'}
                 error={fieldErrors.consentPrivacy}
-                label="Acepto la politica de privacidad y el tratamiento de mis datos para este contacto."
+                label="Acepto la política de privacidad y el tratamiento de mis datos para este contacto."
                 onChange={(checked) => updateField('consentPrivacy', checked)}
               />
             </div>
@@ -263,7 +284,7 @@ export function ContactSection() {
                 disabled={status === 'loading'}
                 className="rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-slate-950 transition hover:bg-[var(--color-accent-strong)] disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {status === 'loading' ? 'Enviando...' : 'Pedir propuesta o diagnostico'}
+                {status === 'loading' ? 'Enviando...' : 'Pedir propuesta o diagnóstico'}
               </button>
               <a
                 href={directWhatsAppHref}
@@ -277,6 +298,7 @@ export function ContactSection() {
 
             {message ? (
               <div
+                aria-live="polite"
                 className={[
                   'mt-5 rounded-[22px] border px-4 py-4 text-sm',
                   status === 'success'

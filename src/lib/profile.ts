@@ -1,9 +1,16 @@
 import type { ProfileBundle, ProfileFormState } from '@/types/site'
 
-const DATA_URL_IMAGE_PATTERN = /^data:image\/(png|jpe?g|webp|gif|svg\+xml);base64,/i
+const DATA_URL_IMAGE_PATTERN = /^data:image\/(png|jpe?g|webp);base64,/i
+const CONTROL_CHARS_REGEX = /[\u0000-\u001F\u007F]+/g
+const MAX_FULL_NAME_LENGTH = 80
+const MAX_PHONE_LENGTH = 24
+const MAX_COMPANY_LENGTH = 120
+const MAX_OPTION_LENGTH = 80
+const MAX_OTHER_LENGTH = 160
+const MAX_INTERESTS = 8
 
 function cleanString(value: string) {
-  return value.trim()
+  return value.replace(CONTROL_CHARS_REGEX, ' ').replace(/\s+/g, ' ').trim()
 }
 
 function cleanOptionalString(value: string) {
@@ -65,7 +72,8 @@ export function sanitizeInterestList(values: string[]) {
     new Set(
       values
         .map((value) => cleanString(value))
-        .filter(Boolean),
+        .filter(Boolean)
+        .slice(0, MAX_INTERESTS),
     ),
   )
 }
@@ -78,12 +86,7 @@ export function normalizeProfileState(form: ProfileFormState) {
     fullName: cleanString(form.fullName),
     phone: cleanOptionalString(form.phone),
     companyName: cleanOptionalString(form.companyName),
-    avatarUrl:
-      avatarUrl.length === 0
-        ? null
-        : isValidAvatarDataUrl(avatarUrl) || /^https?:\/\//i.test(avatarUrl)
-          ? avatarUrl
-          : null,
+    avatarUrl: avatarUrl.length === 0 ? null : isValidAvatarDataUrl(avatarUrl) ? avatarUrl : null,
     businessType: cleanOptionalString(form.businessType),
     businessTypeOther: cleanOptionalString(form.businessTypeOther),
     teamSize: cleanOptionalString(form.teamSize),
@@ -108,36 +111,67 @@ export function validateProfileState(form: ProfileFormState) {
 
   if (!normalized.fullName) {
     errors.fullName = 'Contanos cómo querés que te llamemos.'
+  } else if (normalized.fullName.length > MAX_FULL_NAME_LENGTH) {
+    errors.fullName = 'Usá un nombre un poco más corto.'
   }
 
-  if (
-    normalized.avatarUrl &&
-    !isValidAvatarDataUrl(normalized.avatarUrl) &&
-    !/^https?:\/\//i.test(normalized.avatarUrl)
-  ) {
+  if (normalized.avatarUrl && !isValidAvatarDataUrl(normalized.avatarUrl)) {
     errors.avatarUrl = 'La imagen no tiene un formato válido.'
   }
 
-  if (
-    normalized.phone &&
-    normalized.phone.length < 8
-  ) {
-    errors.phone = 'Revisá el número de contacto.'
+  if (normalized.phone) {
+    const digits = normalized.phone.replace(/\D/g, '')
+
+    if (digits.length < 8 || digits.length > 15 || normalized.phone.length > MAX_PHONE_LENGTH) {
+      errors.phone = 'Revisá el número de contacto.'
+    }
+  }
+
+  if (normalized.companyName && normalized.companyName.length > MAX_COMPANY_LENGTH) {
+    errors.companyName = 'El nombre de la empresa es demasiado largo.'
+  }
+
+  if (normalized.businessType && normalized.businessType.length > MAX_OPTION_LENGTH) {
+    errors.businessType = 'El rubro es demasiado largo.'
+  }
+
+  if (normalized.teamSize && normalized.teamSize.length > MAX_OPTION_LENGTH) {
+    errors.teamSize = 'El tamaño del equipo es demasiado largo.'
+  }
+
+  if (normalized.primaryNeed && normalized.primaryNeed.length > MAX_OPTION_LENGTH) {
+    errors.primaryNeed = 'La necesidad principal es demasiado larga.'
   }
 
   if (
-    normalized.businessType === 'otro' &&
-    !normalized.businessTypeOther
+    normalized.preferredContactChannel &&
+    normalized.preferredContactChannel.length > MAX_OPTION_LENGTH
   ) {
+    errors.preferredContactChannel = 'El canal elegido es demasiado largo.'
+  }
+
+  if (normalized.businessType === 'otro' && !normalized.businessTypeOther) {
     errors.businessTypeOther = 'Sumá una breve descripción del rubro.'
+  } else if (
+    normalized.businessTypeOther &&
+    normalized.businessTypeOther.length > MAX_OTHER_LENGTH
+  ) {
+    errors.businessTypeOther = 'Describilo con un poco menos de detalle.'
   }
 
   if (normalized.teamSize === 'otro' && !normalized.teamSizeOther) {
     errors.teamSizeOther = 'Contanos el tamaño aproximado del equipo.'
+  } else if (normalized.teamSizeOther && normalized.teamSizeOther.length > MAX_OTHER_LENGTH) {
+    errors.teamSizeOther = 'Describilo con un poco menos de detalle.'
   }
 
   if (normalized.primaryNeed === 'otro' && !normalized.primaryNeedOther) {
     errors.primaryNeedOther = 'Describí la necesidad principal.'
+  } else if (
+    normalized.primaryNeedOther &&
+    normalized.primaryNeedOther.length > MAX_OTHER_LENGTH
+  ) {
+    errors.primaryNeedOther = 'Describila con un poco menos de detalle.'
   }
 
   if (
@@ -146,6 +180,15 @@ export function validateProfileState(form: ProfileFormState) {
   ) {
     errors.preferredContactChannelOther =
       'Indicá cuál es el mejor canal para contactarte.'
+  } else if (
+    normalized.preferredContactChannelOther &&
+    normalized.preferredContactChannelOther.length > MAX_OTHER_LENGTH
+  ) {
+    errors.preferredContactChannelOther = 'Describilo con un poco menos de detalle.'
+  }
+
+  if (normalized.interestsOther && normalized.interestsOther.length > MAX_OTHER_LENGTH) {
+    errors.interestsOther = 'Resumí un poco más ese interés.'
   }
 
   return {
@@ -169,17 +212,19 @@ export function deriveInitials(value: string) {
   return tokens.map((token) => token[0]?.toUpperCase() ?? '').join('')
 }
 
-export function isProfileComplete(bundle: Pick<
-  ProfileBundle,
-  | 'fullName'
-  | 'companyName'
-  | 'businessType'
-  | 'businessTypeOther'
-  | 'primaryNeed'
-  | 'primaryNeedOther'
-  | 'interests'
-  | 'interestsOther'
->) {
+export function isProfileComplete(
+  bundle: Pick<
+    ProfileBundle,
+    | 'fullName'
+    | 'companyName'
+    | 'businessType'
+    | 'businessTypeOther'
+    | 'primaryNeed'
+    | 'primaryNeedOther'
+    | 'interests'
+    | 'interestsOther'
+  >,
+) {
   if (!bundle.fullName?.trim()) {
     return false
   }

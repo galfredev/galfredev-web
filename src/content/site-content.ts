@@ -1,12 +1,11 @@
 import type {
   Certification,
   HeroMetric,
+  HeroScenario,
   NavItem,
   ProcessStep,
-  ProfileOption,
   SolutionCard,
   SocialLink,
-  TrustSignal,
   ValuePillar,
 } from '@/types/site'
 
@@ -22,7 +21,7 @@ export const heroMetrics: HeroMetric[] = [
   {
     value: 'WhatsApp',
     label: 'embudo principal',
-    detail: 'La web empuja a conversación real, no a un portal pesado.',
+    detail: 'La web empuja a una conversación real, no a un portal pesado.',
   },
   {
     value: 'Argentina',
@@ -36,36 +35,205 @@ export const heroMetrics: HeroMetric[] = [
   },
 ]
 
+export const heroScenarios: HeroScenario[] = [
+  {
+    id: 'opportunities',
+    headline: 'no perder oportunidades',
+    panelTitle: 'Captación sin fuga',
+    panelEyebrow: 'Seguimiento activo',
+    panelStatus: 'LIVE',
+    focusLabel: 'SEGUIMIENTO',
+    focusValue: 'Lead retomado automáticamente',
+    tags: ['Lead entrante', 'Prioridad alta'],
+    messages: [
+      {
+        align: 'left',
+        tone: 'neutral',
+        text: 'Hola, quiero saber si me pueden ayudar a ordenar las consultas que hoy quedan colgadas.',
+      },
+      {
+        align: 'right',
+        tone: 'accent',
+        text: 'Sí. Podemos capturar el lead, detectar prioridad y activar seguimiento sin perder contexto.',
+      },
+      {
+        align: 'left',
+        tone: 'system',
+        text: 'Recordatorio armado para retomar la conversación en 10 minutos.',
+        hiddenOnMobile: true,
+      },
+    ],
+    footerTitle: 'Ruta automática de seguimiento',
+    footerDetail: 'Captura, clasificación y próxima acción sin depender de la memoria manual.',
+    footerStatus: 'Activo',
+    cards: [
+      { label: 'Lead', value: 'Nuevo y priorizado' },
+      { label: 'Próximo paso', value: 'Seguimiento en 10 min' },
+    ],
+  },
+  {
+    id: 'reply-fast',
+    headline: 'responder más rápido',
+    panelTitle: 'Respuesta en segundos',
+    panelEyebrow: 'Atención automatizada',
+    panelStatus: 'LIVE',
+    focusLabel: 'RESPUESTA',
+    focusValue: 'Consulta atendida en segundos',
+    tags: ['Bot activo', 'WhatsApp'],
+    messages: [
+      {
+        align: 'left',
+        tone: 'neutral',
+        text: 'Hola, quería consultar por precios y tiempos para implementar algo en mi negocio.',
+      },
+      {
+        align: 'right',
+        tone: 'accent',
+        text: 'Perfecto. Ya te comparto una primera respuesta y preparo el diagnóstico comercial.',
+      },
+      {
+        align: 'left',
+        tone: 'system',
+        text: 'Respuesta automática enviada. Lead asignado y clasificado.',
+        hiddenOnMobile: true,
+      },
+    ],
+    footerTitle: 'Motor de respuesta inmediata',
+    footerDetail: 'Bot, filtro y derivación listos para bajar la demora desde el primer contacto.',
+    footerStatus: 'Listo',
+    cards: [
+      { label: 'Tiempo', value: 'Atendido al instante' },
+      { label: 'Estado', value: 'Clasificado y asignado' },
+    ],
+  },
+  {
+    id: 'followups',
+    headline: 'ordenar seguimientos',
+    panelTitle: 'Seguimiento ordenado',
+    panelEyebrow: 'Pipeline claro',
+    panelStatus: 'SYNC',
+    focusLabel: 'PIPELINE',
+    focusValue: 'Cada lead con estado y recordatorio',
+    tags: ['Próxima acción', 'Pipeline vivo'],
+    messages: [
+      {
+        align: 'left',
+        tone: 'neutral',
+        text: 'Necesito saber quién pidió propuesta, quién quedó pendiente y a quién hay que volver a escribir.',
+      },
+      {
+        align: 'right',
+        tone: 'accent',
+        text: 'Lo ordenamos por estado, prioridad y próxima acción para que siempre sepas qué sigue.',
+      },
+      {
+        align: 'left',
+        tone: 'system',
+        text: 'Recordatorio comercial activado y tablero actualizado.',
+        hiddenOnMobile: true,
+      },
+    ],
+    footerTitle: 'Seguimiento sin caos',
+    footerDetail: 'Estados claros, alertas y próxima tarea visibles para que la operación no se desordene.',
+    footerStatus: 'En curso',
+    cards: [
+      { label: 'Estado', value: 'Propuesta enviada' },
+      { label: 'Próximo paso', value: 'Volver a escribir mañana' },
+    ],
+  },
+  {
+    id: 'lead-filter',
+    headline: 'filtrar mejor los leads',
+    panelTitle: 'Lead clasificado antes de vender',
+    panelEyebrow: 'Filtro comercial',
+    panelStatus: 'READY',
+    focusLabel: 'CLASIFICACIÓN',
+    focusValue: 'Necesidad detectada y prioridad asignada',
+    tags: ['Filtro inicial', 'Necesidad principal'],
+    messages: [
+      {
+        align: 'left',
+        tone: 'neutral',
+        text: 'No todos los leads tienen el mismo valor y hoy estamos atendiendo todo igual.',
+      },
+      {
+        align: 'right',
+        tone: 'accent',
+        text: 'Podemos filtrar por necesidad, contexto y urgencia para vender con más criterio.',
+      },
+      {
+        align: 'left',
+        tone: 'system',
+        text: 'Lead derivado a seguimiento comercial con prioridad media.',
+        hiddenOnMobile: true,
+      },
+    ],
+    footerTitle: 'Filtro antes de la venta',
+    footerDetail: 'Cada contacto entra con mejor contexto para decidir respuesta, seguimiento o derivación.',
+    footerStatus: 'Listo',
+    cards: [
+      { label: 'Necesidad', value: 'WhatsApp y captación' },
+      { label: 'Prioridad', value: 'Media, con seguimiento' },
+    ],
+  },
+  {
+    id: 'commercial-control',
+    headline: 'tener control comercial',
+    panelTitle: 'Visibilidad comercial real',
+    panelEyebrow: 'Operación coordinada',
+    panelStatus: 'SYNC',
+    focusLabel: 'VISIBILIDAD',
+    focusValue: 'Estados, alertas y próxima acción en un mismo flujo',
+    tags: ['Alertas', 'Integración activa'],
+    messages: [
+      {
+        align: 'left',
+        tone: 'neutral',
+        text: 'Quiero ver qué está pasando con ventas, seguimientos y consultas sin depender de planillas sueltas.',
+      },
+      {
+        align: 'right',
+        tone: 'accent',
+        text: 'Centralizamos estados, mensajes y alertas para que el equipo opere con más orden.',
+      },
+      {
+        align: 'left',
+        tone: 'system',
+        text: 'Panel actualizado. Próximas acciones sincronizadas con el flujo comercial.',
+        hiddenOnMobile: true,
+      },
+    ],
+    footerTitle: 'Control comercial con criterio',
+    footerDetail: 'Más visibilidad para decidir rápido, priorizar bien y sostener el ritmo operativo.',
+    footerStatus: 'Activo',
+    cards: [
+      { label: 'Vista', value: 'Embudo comercial visible' },
+      { label: 'Alerta', value: 'Próxima acción confirmada' },
+    ],
+  },
+]
+
 export const valuePillars: ValuePillar[] = [
   {
     icon: '01',
     title: 'Responder rápido',
     summary:
-      'WhatsApp, respuestas automáticas y recordatorios para no dejar consultas enfriarse.',
-    points: [
-      'Respuesta automática por WhatsApp',
-      'Seguimiento sin olvidos',
-    ],
+      'WhatsApp, respuestas automáticas y recordatorios para no dejar que las consultas se enfríen.',
+    points: ['Respuesta automática por WhatsApp', 'Seguimiento sin olvidos'],
   },
   {
     icon: '02',
     title: 'Ordenar procesos',
     summary:
       'Conecto herramientas, formularios y sistemas para que el negocio tenga una sola lógica.',
-    points: [
-      'Menos doble carga',
-      'Menos errores operativos',
-    ],
+    points: ['Menos doble carga', 'Menos errores operativos'],
   },
   {
     icon: '03',
     title: 'Escalar con criterio',
     summary:
       'Cuando lo estándar no alcanza, diseño la pieza de software necesaria para que el proceso escale.',
-    points: [
-      'Integración con tu caso real',
-      'Base mantenible y lista para crecer',
-    ],
+    points: ['Integración con tu caso real', 'Base mantenible y lista para crecer'],
   },
 ]
 
@@ -76,10 +244,7 @@ export const solutions: SolutionCard[] = [
     audience: 'Consultas diarias',
     pain: 'Hoy se enfrían oportunidades por demora o desorden.',
     outcome: 'Más velocidad de respuesta y mejor filtro comercial.',
-    bullets: [
-      'Respuestas con contexto',
-      'Filtro y derivación',
-    ],
+    bullets: ['Respuestas con contexto', 'Filtro y derivación'],
     ctaLabel: 'Consultar precios',
     message:
       'Hola, quiero consultar precios por una solución de captación y respuesta automática por WhatsApp.',
@@ -90,10 +255,7 @@ export const solutions: SolutionCard[] = [
     audience: 'Leads y cotizaciones',
     pain: 'Los leads quedan en pausa o sin próxima acción.',
     outcome: 'Seguimiento automático que mantiene viva la conversación.',
-    bullets: [
-      'Estados claros',
-      'Alertas y recordatorios',
-    ],
+    bullets: ['Estados claros', 'Alertas y recordatorios'],
     ctaLabel: 'Pedir propuesta',
     message:
       'Hola, quiero pedir una propuesta para automatizar el seguimiento de potenciales clientes y ventas.',
@@ -103,11 +265,8 @@ export const solutions: SolutionCard[] = [
     title: 'Turnos, recordatorios y reprogramaciones',
     audience: 'Agendas y reservas',
     pain: 'Las ausencias y cambios desordenan la operación.',
-    outcome: 'Menos no-shows y agenda más predecible.',
-    bullets: [
-      'Confirmación automática',
-      'Reprogramación simple',
-    ],
+    outcome: 'Menos no-shows y una agenda más predecible.',
+    bullets: ['Confirmación automática', 'Reprogramación simple'],
     ctaLabel: 'Ver si aplica a tu negocio',
     message:
       'Hola, quiero ver si una automatización de turnos, recordatorios y reprogramaciones aplica a mi negocio.',
@@ -118,10 +277,7 @@ export const solutions: SolutionCard[] = [
     audience: 'Procesos que ya superaron planillas',
     pain: 'Los parches ya no alcanzan y todo empieza a trabarse.',
     outcome: 'Una base más sólida para operar, integrar y crecer.',
-    bullets: [
-      'Backends y paneles',
-      'Integraciones y APIs',
-    ],
+    bullets: ['Backends y paneles', 'Integraciones y APIs'],
     ctaLabel: 'Consultar solución',
     message:
       'Hola, quiero consultar por software a medida e integraciones para ordenar y escalar mi negocio.',
@@ -132,8 +288,7 @@ export const processSteps: ProcessStep[] = [
   {
     step: '01',
     title: 'Diagnóstico de negocio',
-    description:
-      'Detectamos dónde hoy se pierde tiempo, control o facturación.',
+    description: 'Detectamos dónde hoy se pierde tiempo, control o facturación.',
     outcome: 'Salimos con una lectura clara del problema y del impacto esperado.',
   },
   {
@@ -198,29 +353,6 @@ export const stackGroups = [
   },
 ]
 
-export const trustSignals: TrustSignal[] = [
-  {
-    title: 'Sin humo de SaaS ficticio',
-    summary: 'La propuesta está planteada como una empresa de servicios e implementación real.',
-    detail: 'La narrativa vende soluciones concretas, no una plataforma inventada.',
-  },
-  {
-    title: 'Arquitectura lista para producción',
-    summary: 'Next.js App Router, Supabase Auth/Database y despliegue preparado para Vercel.',
-    detail: 'Base limpia, moderna y fácil de iterar sin arrastrar dependencias viejas.',
-  },
-  {
-    title: 'Captura de leads con consentimiento',
-    summary: 'Leads, preferencias y consentimiento quedan separados para trabajar con más criterio.',
-    detail: 'Se privilegia confianza y prolijidad comercial por sobre la captura agresiva.',
-  },
-  {
-    title: 'Perfil autenticado, no portal pesado',
-    summary: 'El login existe como soporte secundario para perfilar mejor a potenciales clientes.',
-    detail: 'No compite con la conversión principal del sitio y sigue siendo útil.',
-  },
-]
-
 export const socialLinks: SocialLink[] = [
   { label: 'X', href: 'https://x.com/galfredev' },
   { label: 'Instagram', href: 'https://www.instagram.com/valentinogalfre/' },
@@ -229,55 +361,11 @@ export const socialLinks: SocialLink[] = [
   { label: 'Email', href: 'mailto:galfredev@gmail.com' },
 ]
 
-export const profileBusinessTypes: ProfileOption[] = [
-  { value: 'servicios-profesionales', label: 'Servicios profesionales' },
-  { value: 'salud-y-bienestar', label: 'Salud y bienestar' },
-  { value: 'educacion', label: 'Educación' },
-  { value: 'ecommerce', label: 'E-commerce' },
-  { value: 'inmobiliario', label: 'Inmobiliario' },
-  { value: 'gastronomia', label: 'Gastronomía' },
-  { value: 'industria', label: 'Industria' },
-  { value: 'otro', label: 'Otro' },
-]
-
-export const profileTeamSizes: ProfileOption[] = [
-  { value: 'solo', label: 'Solo o independiente' },
-  { value: '2-5', label: '2 a 5 personas' },
-  { value: '6-15', label: '6 a 15 personas' },
-  { value: '16-50', label: '16 a 50 personas' },
-  { value: '50+', label: 'Más de 50 personas' },
-]
-
-export const profileNeeds: ProfileOption[] = [
-  { value: 'whatsapp-y-captacion', label: 'WhatsApp y captación' },
-  { value: 'seguimiento-comercial', label: 'Seguimiento comercial' },
-  { value: 'turnos-y-recordatorios', label: 'Turnos y recordatorios' },
-  { value: 'cobranzas-y-avisos', label: 'Cobranzas y avisos' },
-  { value: 'automatizacion-interna', label: 'Automatización interna' },
-  { value: 'software-a-medida', label: 'Software a medida' },
-]
-
-export const interestOptions: ProfileOption[] = [
-  { value: 'whatsapp', label: 'WhatsApp' },
-  { value: 'integraciones', label: 'Integraciones' },
-  { value: 'ia-aplicada', label: 'IA aplicada' },
-  { value: 'dashboards', label: 'Dashboards' },
-  { value: 'bots', label: 'Bots' },
-  { value: 'automatizacion-operativa', label: 'Automatización operativa' },
-]
-
-export const profileChannels: ProfileOption[] = [
-  { value: 'whatsapp', label: 'WhatsApp' },
-  { value: 'email', label: 'Email' },
-  { value: 'llamada', label: 'Llamada' },
-]
-
 export const siteCopy = {
   brand: 'GalfreDev',
   founderName: 'Valentino Galfré',
   founderRole: 'Automatización, software a medida e IA aplicada para negocios reales.',
   founderImage: '/images/founder/valentino-galfre.png',
-  whatsappBaseMessage:
-    'Hola, me gustaría consultar por los servicios de GalfreDev.',
+  whatsappBaseMessage: 'Hola, me gustaría consultar por los servicios de GalfreDev.',
   email: 'galfredev@gmail.com',
 }

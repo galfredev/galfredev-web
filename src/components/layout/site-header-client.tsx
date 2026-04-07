@@ -22,20 +22,34 @@ export function SiteHeaderClient({
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16)
+    const onScroll = () => {
+      const nextValue = window.scrollY > 16
+      setScrolled((current) => (current === nextValue ? current : nextValue))
+    }
 
     onScroll()
-    window.addEventListener('scroll', onScroll)
+    window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   useEffect(() => {
-    function closeMenu() {
+    function handleWindowClick() {
       setMenuOpen(false)
     }
 
-    window.addEventListener('click', closeMenu)
-    return () => window.removeEventListener('click', closeMenu)
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setOpen(false)
+        setMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('click', handleWindowClick)
+    window.addEventListener('keydown', handleEscape)
+    return () => {
+      window.removeEventListener('click', handleWindowClick)
+      window.removeEventListener('keydown', handleEscape)
+    }
   }, [])
 
   const desktopItems = useMemo(() => {
@@ -73,7 +87,7 @@ export function SiteHeaderClient({
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex">
+        <nav className="hidden items-center gap-7 lg:flex" aria-label="Navegación principal">
           {desktopItems.map((item) =>
             resolveHref(item.href).startsWith('/') ? (
               <Link
@@ -114,6 +128,8 @@ export function SiteHeaderClient({
                 onClick={() => setMenuOpen((value) => !value)}
                 className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/6 px-2 py-1.5 text-left transition hover:border-white/20 hover:bg-white/8"
                 aria-label="Abrir menú de usuario"
+                aria-expanded={menuOpen}
+                aria-controls="user-menu"
               >
                 <UserAvatar user={authUser} />
                 <span className="max-w-[10rem] truncate text-sm text-white/82">
@@ -125,6 +141,7 @@ export function SiteHeaderClient({
               <AnimatePresence>
                 {menuOpen ? (
                   <motion.div
+                    id="user-menu"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
@@ -178,6 +195,8 @@ export function SiteHeaderClient({
           onClick={() => setOpen((value) => !value)}
           className="inline-flex size-11 items-center justify-center rounded-full border border-white/10 bg-white/6 text-white lg:hidden"
           aria-label={open ? 'Cerrar navegación' : 'Abrir navegación'}
+          aria-expanded={open}
+          aria-controls="mobile-navigation"
         >
           {open ? <X size={18} /> : <Menu size={18} />}
         </button>
@@ -186,6 +205,7 @@ export function SiteHeaderClient({
       <AnimatePresence>
         {open ? (
           <motion.div
+            id="mobile-navigation"
             initial={{ opacity: 0, y: -12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}

@@ -1,5 +1,7 @@
 'use client'
 
+import { BlurHighlight } from '@/components/motion/blur-highlight'
+import { BorderGlowCard } from '@/components/motion/border-glow-card'
 import { InteractivePanel } from '@/components/motion/interactive-panel'
 import { Reveal } from '@/components/motion/reveal'
 import { certifications, founderHighlights, siteCopy, stackGroups } from '@/content/site-content'
@@ -53,9 +55,7 @@ function CertificationShowcase() {
         <InteractivePanel className="p-4">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-medium text-white">
-                {activeCertification.title}
-              </p>
+              <p className="text-sm font-medium text-white">{activeCertification.title}</p>
               <p className="mt-1 text-sm text-white/48">
                 {activeCertification.issuer} · {activeCertification.date}
               </p>
@@ -106,7 +106,7 @@ function CertificationShowcase() {
                   </p>
                 </div>
                 <span className="rounded-full border border-white/10 px-3 py-2 text-xs uppercase tracking-[0.22em] text-white/54">
-                  Tocar afuera para cerrar
+                  Tocá afuera para cerrar
                 </span>
               </div>
               <div className="relative aspect-[16/10] overflow-hidden rounded-[20px] border border-white/8">
@@ -131,20 +131,20 @@ export function FounderSection() {
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <SectionHeading
-            eyebrow="Valentino Galfré"
+            eyebrow="Valentino Galfre"
             title="Ingeniería, automatización e implementación real para negocios que necesitan avanzar en serio."
-            description="Quise que esta sección tenga más presencia visual, sin perder claridad. La idea es que se sienta humana, técnica y sólida al mismo tiempo."
+            description="Quise que esta sección tuviera más presencia visual, sin perder claridad. La idea es que se sienta humana, técnica y sólida al mismo tiempo."
           />
         </Reveal>
 
         <div className="mt-12 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
           <Reveal className="space-y-6">
-            <div className="relative overflow-hidden rounded-[34px] border border-white/8 bg-white/5 p-4">
+            <BorderGlowCard className="p-4">
               <div className="absolute inset-x-8 top-0 h-32 rounded-full bg-[radial-gradient(circle,rgba(61,221,196,0.22),transparent_62%)] blur-3xl" />
               <div className="relative aspect-[4/5] overflow-hidden rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))]">
                 <Image
                   src={siteCopy.founderImage}
-                  alt="Valentino Galfré"
+                  alt="Valentino Galfre"
                   fill
                   className="object-cover"
                 />
@@ -168,7 +168,7 @@ export function FounderSection() {
                   </motion.div>
                 ))}
               </div>
-            </div>
+            </BorderGlowCard>
 
             <div className="grid gap-4 sm:grid-cols-3">
               {['UTN FRC', 'Backend', 'IA aplicada'].map((item, index) => {
@@ -190,8 +190,10 @@ export function FounderSection() {
             <Reveal>
               <InteractivePanel className="p-6">
                 <p className="text-lg leading-8 text-white/72">
-                  “No solo escribo código: diseño sistemas que optimizan procesos,
-                  reducen costos operativos y le devuelven foco al negocio.”
+                  <BlurHighlight
+                    text="No solo escribo código: diseño sistemas que optimizan procesos, reducen costos operativos y le devuelven foco al negocio."
+                    highlightWords={['sistemas', 'procesos', 'costos', 'negocio']}
+                  />
                 </p>
                 <div className="mt-6 grid gap-3">
                   {founderHighlights.map((item) => (

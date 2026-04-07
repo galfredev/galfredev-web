@@ -1,4 +1,4 @@
-import { InteractivePanel } from '@/components/motion/interactive-panel'
+import { BorderGlowCard } from '@/components/motion/border-glow-card'
 import { Reveal } from '@/components/motion/reveal'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { solutions } from '@/content/site-content'
@@ -13,14 +13,14 @@ export function SolutionsSection() {
           <SectionHeading
             eyebrow="Soluciones claras"
             title="Cuatro frentes donde GalfreDev puede mover de verdad la aguja."
-            description="Menos catálogo, más claridad. Cada bloque apunta a un problema frecuente y un resultado fácil de entender."
+            description="Menos catálogo, más claridad. Cada bloque apunta a un problema frecuente y a un resultado fácil de entender."
           />
         </Reveal>
 
         <div className="mt-12 grid gap-5 lg:grid-cols-2">
           {solutions.map((solution, index) => (
             <Reveal key={solution.title} delay={index * 0.04}>
-              <InteractivePanel className="p-6">
+              <BorderGlowCard className="p-6">
                 <div className="flex flex-wrap items-center gap-3">
                   {solution.label ? (
                     <span className="rounded-full border border-[var(--color-accent)]/18 bg-[var(--color-accent)]/8 px-3 py-1 text-[11px] uppercase tracking-[0.22em] text-[var(--color-accent)]">
@@ -63,7 +63,7 @@ export function SolutionsSection() {
                   {solution.ctaLabel}
                   <ArrowRight size={16} />
                 </a>
-              </InteractivePanel>
+              </BorderGlowCard>
             </Reveal>
           ))}
         </div>

@@ -37,7 +37,7 @@ async function optimizeAvatar(file: File) {
   }
 
   if (file.size > 5 * 1024 * 1024) {
-    throw new Error('La imagen es muy pesada. Usá un archivo menor a 5MB.')
+    throw new Error('La imagen es muy pesada. Usá un archivo menor a 5 MB.')
   }
 
   const source = await readFileAsDataUrl(file)

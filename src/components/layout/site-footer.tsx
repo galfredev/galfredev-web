@@ -20,18 +20,18 @@ export function SiteFooter() {
         <div className="space-y-4">
           <p className="text-sm font-medium text-white">Mapa rápido</p>
           <div className="grid gap-3 text-sm text-white/62">
-            <a href="#soluciones" className="transition hover:text-white">
+            <Link href="/#soluciones" className="transition hover:text-white">
               Soluciones
-            </a>
-            <a href="#proceso" className="transition hover:text-white">
+            </Link>
+            <Link href="/#proceso" className="transition hover:text-white">
               Cómo trabajamos
-            </a>
-            <a href="#roi" className="transition hover:text-white">
+            </Link>
+            <Link href="/#roi" className="transition hover:text-white">
               Calculadora ROI
-            </a>
-            <a href="#fundador" className="transition hover:text-white">
+            </Link>
+            <Link href="/#fundador" className="transition hover:text-white">
               Valentino Galfré
-            </a>
+            </Link>
             <Link href="/privacidad" className="transition hover:text-white">
               Política de privacidad
             </Link>

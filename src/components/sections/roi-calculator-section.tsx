@@ -1,7 +1,7 @@
 'use client'
 
-import { InteractivePanel } from '@/components/motion/interactive-panel'
 import { Reveal } from '@/components/motion/reveal'
+import { SimpleGraph } from '@/components/motion/simple-graph'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { calculateRoi } from '@/lib/roi'
 import { formatCurrencyArs } from '@/lib/utils'
@@ -24,7 +24,7 @@ export function RoiCalculatorSection() {
     `Costo mensual estimado de esa tarea o recurso: ${formatCurrencyArs(inputs.monthlyCostArs)}`,
     `Valor promedio por venta, turno o gestión crítica: ${formatCurrencyArs(inputs.averageTicketArs)}`,
     `Impacto mensual estimado: ${formatCurrencyArs(results.totalMonthlyImpactArs)}`,
-    'Quiero revisar este escenario con ustedes.',
+    'Quiero revisar este escenario con vos.',
   ].join('\n')
 
   return (
@@ -66,7 +66,10 @@ export function RoiCalculatorSection() {
                 step: 5000,
               },
             ].map((field) => (
-              <InteractivePanel key={field.key} className="p-5">
+              <div
+                key={field.key}
+                className="rounded-[30px] border border-white/8 bg-white/5 p-5"
+              >
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="text-sm font-medium text-white">{field.label}</p>
                   <span className="text-sm text-[var(--color-accent)]">
@@ -77,9 +80,7 @@ export function RoiCalculatorSection() {
                         )}
                   </span>
                 </div>
-                <p className="mt-2 text-sm leading-6 text-white/50">
-                  {field.helper}
-                </p>
+                <p className="mt-2 text-sm leading-6 text-white/50">{field.helper}</p>
                 <input
                   type="range"
                   min={field.min}
@@ -94,33 +95,38 @@ export function RoiCalculatorSection() {
                   }
                   className="mt-5 w-full accent-[var(--color-accent)]"
                 />
-              </InteractivePanel>
+              </div>
             ))}
           </Reveal>
 
           <Reveal delay={0.08} className="grid gap-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <InteractivePanel className="p-5">
-                <p className="text-sm text-white/48">Tiempo recuperable al mes</p>
-                <h3 className="mt-3 text-4xl font-semibold tracking-[-0.06em] text-white">
-                  {results.monthlyHoursRecovered.toFixed(0)}h
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-white/58">
-                  Estimación de horas que podrían dejar de hacerse a mano.
-                </p>
-              </InteractivePanel>
-              <InteractivePanel className="p-5">
-                <p className="text-sm text-white/48">Impacto mensual estimado</p>
-                <h3 className="mt-3 text-4xl font-semibold tracking-[-0.06em] text-white">
-                  {formatCurrencyArs(results.totalMonthlyImpactArs)}
-                </h3>
-                <p className="mt-3 text-sm leading-6 text-white/58">
-                  Combina ahorro operativo y valor que hoy puede escaparse por demora o desorden.
-                </p>
-              </InteractivePanel>
+            <div className="grid gap-4 xl:grid-cols-[0.88fr_1.12fr]">
+              <SimpleGraph className="h-full" />
+
+              <div className="grid gap-4">
+                <div className="rounded-[30px] border border-white/8 bg-white/5 p-5">
+                  <p className="text-sm text-white/48">Tiempo recuperable al mes</p>
+                  <h3 className="mt-3 text-4xl font-semibold tracking-[-0.06em] text-white">
+                    {results.monthlyHoursRecovered.toFixed(0)}h
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-white/58">
+                    Estimación de horas que podrían dejar de hacerse a mano.
+                  </p>
+                </div>
+
+                <div className="rounded-[30px] border border-white/8 bg-white/5 p-5">
+                  <p className="text-sm text-white/48">Impacto mensual estimado</p>
+                  <h3 className="mt-3 text-4xl font-semibold tracking-[-0.06em] text-white">
+                    {formatCurrencyArs(results.totalMonthlyImpactArs)}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-white/58">
+                    Combina ahorro operativo y valor que hoy puede escaparse por demora o desorden.
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <InteractivePanel className="p-6">
+            <div className="rounded-[30px] border border-white/8 bg-white/5 p-6">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="rounded-[22px] border border-white/8 bg-black/16 p-4">
                   <p className="text-sm text-white/48">Ahorro operativo potencial</p>
@@ -154,7 +160,7 @@ export function RoiCalculatorSection() {
                   </span>
                 </div>
               </div>
-            </InteractivePanel>
+            </div>
           </Reveal>
         </div>
       </div>

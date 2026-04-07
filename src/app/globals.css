@@ -23,6 +23,12 @@ html {
   scroll-behavior: smooth;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 main[id],
 section[id] {
   scroll-margin-top: 5.9rem;
@@ -62,6 +68,11 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(61, 221, 196, 0.92);
+  outline-offset: 3px;
 }
 
 ::selection {
