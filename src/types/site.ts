@@ -9,6 +9,34 @@ export type HeroMetric = {
   detail: string
 }
 
+export type HeroScenarioMessage = {
+  align: 'left' | 'right'
+  tone: 'neutral' | 'accent' | 'system'
+  text: string
+  hiddenOnMobile?: boolean
+}
+
+export type HeroScenarioCard = {
+  label: string
+  value: string
+}
+
+export type HeroScenario = {
+  id: string
+  headline: string
+  panelTitle: string
+  panelEyebrow: string
+  panelStatus: string
+  focusLabel: string
+  focusValue: string
+  tags: string[]
+  messages: HeroScenarioMessage[]
+  footerTitle: string
+  footerDetail: string
+  footerStatus: string
+  cards: HeroScenarioCard[]
+}
+
 export type ValuePillar = {
   icon?: string
   title: string
@@ -32,12 +60,6 @@ export type ProcessStep = {
   title: string
   description: string
   outcome: string
-}
-
-export type TrustSignal = {
-  title: string
-  summary: string
-  detail: string
 }
 
 export type Certification = {

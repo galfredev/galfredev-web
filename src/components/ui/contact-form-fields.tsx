@@ -19,12 +19,29 @@ type FieldShellProps = {
   error?: string
   helper?: string
   children: ReactNode
+  fieldId?: string
+  labelId?: string
 }
 
-function FieldShell({ label, error, helper, children }: FieldShellProps) {
+function FieldShell({
+  label,
+  error,
+  helper,
+  children,
+  fieldId,
+  labelId,
+}: FieldShellProps) {
   return (
     <div className="grid gap-2 text-sm text-white/72">
-      <span className="text-sm font-medium text-white">{label}</span>
+      {fieldId ? (
+        <label id={labelId} htmlFor={fieldId} className="text-sm font-medium text-white">
+          {label}
+        </label>
+      ) : (
+        <span id={labelId} className="text-sm font-medium text-white">
+          {label}
+        </span>
+      )}
       {children}
       {error ? (
         <p className="text-sm text-rose-200">{error}</p>
@@ -49,12 +66,17 @@ export function TextInputField({
   error,
   helper,
   className,
+  id,
   ...props
 }: TextInputFieldProps) {
+  const generatedId = useId()
+  const fieldId = id ?? generatedId
+
   return (
-    <FieldShell label={label} error={error} helper={helper}>
+    <FieldShell label={label} error={error} helper={helper} fieldId={fieldId}>
       <input
         {...props}
+        id={fieldId}
         aria-invalid={Boolean(error)}
         className={[fieldClassName, className].filter(Boolean).join(' ')}
       />
@@ -76,12 +98,17 @@ export function TextAreaField({
   error,
   helper,
   className,
+  id,
   ...props
 }: TextAreaFieldProps) {
+  const generatedId = useId()
+  const fieldId = id ?? generatedId
+
   return (
-    <FieldShell label={label} error={error} helper={helper}>
+    <FieldShell label={label} error={error} helper={helper} fieldId={fieldId}>
       <textarea
         {...props}
+        id={fieldId}
         aria-invalid={Boolean(error)}
         className={[
           fieldClassName,
@@ -125,6 +152,7 @@ export function SelectField({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const buttonId = useId()
   const listboxId = useId()
+  const labelId = useId()
 
   useEffect(() => {
     function handlePointerDown(event: MouseEvent) {
@@ -151,7 +179,7 @@ export function SelectField({
   const selectedOption = options.find((option) => option.value === value)
 
   return (
-    <FieldShell label={label} error={error} helper={helper}>
+    <FieldShell label={label} error={error} helper={helper} labelId={labelId}>
       <div ref={wrapperRef} className="relative">
         <button
           id={buttonId}
@@ -160,6 +188,7 @@ export function SelectField({
           aria-expanded={open}
           aria-haspopup="listbox"
           aria-controls={listboxId}
+          aria-labelledby={`${labelId} ${buttonId}`}
           className={[
             fieldClassName,
             'flex min-h-[52px] items-center justify-between text-left',
@@ -186,7 +215,7 @@ export function SelectField({
           <div
             id={listboxId}
             role="listbox"
-            aria-labelledby={buttonId}
+            aria-labelledby={labelId}
             className="absolute left-0 right-0 z-20 mt-2 overflow-hidden rounded-[24px] border border-white/12 bg-[#0f1520] p-2 shadow-[0_24px_60px_rgba(0,0,0,0.45)] backdrop-blur-xl"
           >
             <button
@@ -257,6 +286,8 @@ export function ConsentCheckboxCard({
     <div className="space-y-2">
       <button
         type="button"
+        role="checkbox"
+        aria-checked={checked}
         disabled={disabled}
         onClick={() => onChange(!checked)}
         className={[

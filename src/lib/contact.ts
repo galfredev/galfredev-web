@@ -35,11 +35,11 @@ export type LeadValidationResult = {
 }
 
 export const leadPrimaryNeedOptions = [
-  { value: 'whatsapp', label: 'WhatsApp y captacion' },
+  { value: 'whatsapp', label: 'WhatsApp y captación' },
   { value: 'seguimiento', label: 'Seguimiento comercial' },
   { value: 'turnos', label: 'Turnos y recordatorios' },
   { value: 'cobranzas', label: 'Cobranzas y avisos' },
-  { value: 'automatizacion-interna', label: 'Automatizacion interna' },
+  { value: 'automatizacion-interna', label: 'Automatización interna' },
   { value: 'software-a-medida', label: 'Software a medida' },
 ] as const
 
@@ -48,6 +48,28 @@ const leadPrimaryNeedLabelMap = new Map<string, string>(
 )
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const phoneDigitsRegex = /\D/g
+const singleLineControlCharsRegex = /[\u0000-\u001F\u007F]+/g
+const multilineControlCharsRegex = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]+/g
+const MAX_FULL_NAME_LENGTH = 80
+const MAX_EMAIL_LENGTH = 160
+const MAX_PHONE_LENGTH = 24
+const MAX_COMPANY_LENGTH = 120
+const MAX_BUSINESS_TYPE_LENGTH = 80
+const MAX_CHALLENGE_LENGTH = 1200
+const MIN_CHALLENGE_LENGTH = 24
+
+function cleanSingleLine(value: string) {
+  return value.replace(singleLineControlCharsRegex, ' ').replace(/\s+/g, ' ').trim()
+}
+
+function cleanMultiline(value: string) {
+  return value
+    .replace(multilineControlCharsRegex, ' ')
+    .replace(/\r\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
 
 export function createInitialLeadFormState(): LeadFormState {
   return {
@@ -89,52 +111,71 @@ export function validateLeadPayload(payload: unknown): payload is LeadPayload {
     typeof candidate.consentPrivacy === 'boolean' &&
     typeof candidate.website === 'string' &&
     typeof candidate.elapsedMs === 'number' &&
+    Number.isFinite(candidate.elapsedMs) &&
     (typeof candidate.source === 'string' || typeof candidate.source === 'undefined')
   )
 }
 
 export function validateLeadForm(input: LeadFormState): LeadValidationResult {
   const normalized: LeadFormState = {
-    fullName: input.fullName.trim(),
-    email: input.email.trim().toLowerCase(),
-    phone: input.phone.trim(),
-    companyName: input.companyName.trim(),
-    businessType: input.businessType.trim(),
-    primaryNeed: input.primaryNeed.trim(),
-    challenge: input.challenge.trim(),
+    fullName: cleanSingleLine(input.fullName),
+    email: cleanSingleLine(input.email).toLowerCase(),
+    phone: cleanSingleLine(input.phone),
+    companyName: cleanSingleLine(input.companyName),
+    businessType: cleanSingleLine(input.businessType),
+    primaryNeed: cleanSingleLine(input.primaryNeed),
+    challenge: cleanMultiline(input.challenge),
     consentFollowUp: input.consentFollowUp,
     consentNewsletter: input.consentNewsletter,
     consentPrivacy: input.consentPrivacy,
-    website: input.website.trim(),
+    website: cleanSingleLine(input.website),
   }
 
   const errors: LeadFieldErrors = {}
 
   if (!normalized.fullName) {
     errors.fullName = 'Necesitamos tu nombre para registrar la consulta.'
+  } else if (normalized.fullName.length > MAX_FULL_NAME_LENGTH) {
+    errors.fullName = 'Usá un nombre un poco más corto.'
   }
 
   if (!normalized.email) {
     errors.email = 'Necesitamos un email para responderte.'
   } else if (!emailRegex.test(normalized.email)) {
-    errors.email = 'Ingresa un email valido.'
+    errors.email = 'Ingresá un email válido.'
+  } else if (normalized.email.length > MAX_EMAIL_LENGTH) {
+    errors.email = 'El email es demasiado largo.'
   }
 
-  const phoneDigits = normalized.phone.replace(/\D/g, '')
+  const phoneDigits = normalized.phone.replace(phoneDigitsRegex, '')
   if (!normalized.phone) {
     errors.phone = 'Necesitamos un WhatsApp para continuar el lead.'
   } else if (phoneDigits.length < 8) {
-    errors.phone = 'Ingresa un numero de WhatsApp valido.'
+    errors.phone = 'Ingresá un número de WhatsApp válido.'
+  } else if (phoneDigits.length > 15 || normalized.phone.length > MAX_PHONE_LENGTH) {
+    errors.phone = 'Revisá el número de WhatsApp antes de enviarlo.'
+  }
+
+  if (normalized.companyName.length > MAX_COMPANY_LENGTH) {
+    errors.companyName = 'El nombre de la empresa es demasiado largo.'
+  }
+
+  if (normalized.businessType.length > MAX_BUSINESS_TYPE_LENGTH) {
+    errors.businessType = 'El rubro es demasiado largo.'
   }
 
   if (!normalized.primaryNeed) {
-    errors.primaryNeed = 'Elegi la necesidad principal.'
+    errors.primaryNeed = 'Elegí la necesidad principal.'
+  } else if (!leadPrimaryNeedLabelMap.has(normalized.primaryNeed)) {
+    errors.primaryNeed = 'Elegí una necesidad principal válida.'
   }
 
   if (!normalized.challenge) {
     errors.challenge = 'Contanos el contexto para preparar mejor la propuesta.'
-  } else if (normalized.challenge.length < 24) {
-    errors.challenge = 'Sumanos un poco mas de contexto para entender la consulta.'
+  } else if (normalized.challenge.length < MIN_CHALLENGE_LENGTH) {
+    errors.challenge = 'Sumanos un poco más de contexto para entender la consulta.'
+  } else if (normalized.challenge.length > MAX_CHALLENGE_LENGTH) {
+    errors.challenge = 'Resumí un poco el contexto para poder revisarlo mejor.'
   }
 
   if (!normalized.consentPrivacy) {
@@ -175,9 +216,9 @@ export function buildLeadWhatsAppMessage(lead: WhatsAppLeadLike) {
     `Necesidad principal: ${getLeadPrimaryNeedLabel(lead.primaryNeed)}`,
     `Contexto: ${lead.challenge}`,
     '',
-    `Consentimiento comercial: ${lead.consentFollowUp ? 'Si' : 'No'}`,
-    `Consentimiento novedades: ${lead.consentNewsletter ? 'Si' : 'No'}`,
-    `Politica de privacidad aceptada: ${lead.consentPrivacy ? 'Si' : 'No'}`,
+    `Consentimiento comercial: ${lead.consentFollowUp ? 'Sí' : 'No'}`,
+    `Consentimiento novedades: ${lead.consentNewsletter ? 'Sí' : 'No'}`,
+    `Política de privacidad aceptada: ${lead.consentPrivacy ? 'Sí' : 'No'}`,
   ]
 
   return lines.filter(Boolean).join('\n')
@@ -192,10 +233,10 @@ export function buildDraftWhatsAppMessage(form: LeadFormState) {
 
   return buildLeadWhatsAppMessage({
     ...validation.normalized,
-    phone: validation.normalized.phone || 'No compartido todavia',
+    phone: validation.normalized.phone || 'No compartido todavía',
     primaryNeed: validation.normalized.primaryNeed || 'A definir',
     challenge:
       validation.normalized.challenge ||
-      'Quiero continuar la conversacion por WhatsApp y terminar de explicar el contexto.',
+      'Quiero continuar la conversación por WhatsApp y terminar de explicar el contexto.',
   })
 }

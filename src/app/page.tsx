@@ -9,6 +9,13 @@ import { ProfileTeaserSection } from '@/components/sections/profile-teaser-secti
 import { RoiCalculatorSection } from '@/components/sections/roi-calculator-section'
 import { SolutionsSection } from '@/components/sections/solutions-section'
 import { ValueSection } from '@/components/sections/value-section'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: '/',
+  },
+}
 
 type HomePageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>
@@ -24,7 +31,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     <>
       <SiteHeader />
       <ProfileToast initialVisible={profileStatus === 'updated'} />
-      <main id="top" className="relative overflow-hidden">
+      <div id="top" />
+      <main id="contenido-principal" className="relative overflow-hidden">
         <HeroSection />
         <ValueSection />
         <SolutionsSection />

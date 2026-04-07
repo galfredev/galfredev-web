@@ -9,10 +9,13 @@ export function WhatsAppFab() {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 520)
+    const onScroll = () => {
+      const nextValue = window.scrollY > 520
+      setVisible((current) => (current === nextValue ? current : nextValue))
+    }
 
     onScroll()
-    window.addEventListener('scroll', onScroll)
+    window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
@@ -29,14 +32,13 @@ export function WhatsAppFab() {
           )}
           target="_blank"
           rel="noreferrer"
+          aria-label="Abrir conversación por WhatsApp con GalfreDev"
           className="fixed bottom-5 right-4 z-50 inline-flex items-center gap-3 rounded-full border border-emerald-400/28 bg-[rgba(11,20,17,0.94)] px-4 py-3 text-sm text-white shadow-[0_18px_48px_rgba(0,0,0,0.35)] backdrop-blur-xl transition hover:border-emerald-400/50 sm:bottom-6 sm:right-6"
         >
           <span className="inline-flex size-10 items-center justify-center rounded-full bg-emerald-400 text-slate-950">
             <MessageCircle size={18} />
           </span>
-          <span className="hidden sm:block">
-            Hablar por WhatsApp
-          </span>
+          <span className="hidden sm:block">Hablar por WhatsApp</span>
         </motion.a>
       ) : null}
     </AnimatePresence>

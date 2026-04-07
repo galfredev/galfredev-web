@@ -1,16 +1,16 @@
 # GalfreDev Web
 
-Nueva base comercial de GalfreDev sobre Next.js App Router, pensada para:
+Landing premium de servicios tecnológicos construida con Next.js App Router, orientada a:
 
-- presentar la marca y sus soluciones con una landing premium orientada a conversión
-- llevar la conversación a WhatsApp o a un diagnóstico comercial
-- ofrecer autenticación secundaria con Supabase Auth
-- guardar perfiles, preferencias, leads y consentimientos de forma separada
-- desplegar con prolijidad en Vercel
+- presentar la propuesta de valor de GalfreDev con foco comercial real
+- llevar la conversación a WhatsApp o a un diagnóstico
+- capturar leads con contexto y consentimiento
+- ofrecer acceso liviano con Supabase Auth
+- dejar una base lista para crecer hacia seguimiento comercial y automatizaciones
 
 ## Stack
 
-- Next.js 16 App Router
+- Next.js 16
 - React 19
 - TypeScript
 - Tailwind CSS 4
@@ -18,9 +18,21 @@ Nueva base comercial de GalfreDev sobre Next.js App Router, pensada para:
 - Supabase Auth + Database
 - Vercel Analytics + Speed Insights
 
+## Scripts
+
+```bash
+npm run dev
+npm run lint
+npm run typecheck
+npm run build
+npm run check
+```
+
+`npm run check` ejecuta la validación completa recomendada antes de subir o desplegar.
+
 ## Variables de entorno
 
-Usá [`.env.example`](D:/DEV/Proyectos/GalfreDev/galfre-dev-next/.env.example) como base.
+Tomá [`.env.example`](./.env.example) como base.
 
 Variables principales:
 
@@ -31,50 +43,71 @@ Variables principales:
 
 Compatibilidad temporal:
 
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` se acepta como fallback mientras migrás el naming viejo.
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` todavía funciona como fallback si seguís usando el naming viejo.
 
-## Desarrollo
+## Desarrollo local
 
 ```bash
 npm install
 npm run dev
 ```
 
-Abrir `http://localhost:3000`
-
-## Validación
-
-```bash
-npm run lint
-npm run build
-```
+Abrí [http://localhost:3000](http://localhost:3000).
 
 ## Estructura principal
 
-- [src/app/page.tsx](D:/DEV/Proyectos/GalfreDev/galfre-dev-next/src/app/page.tsx): landing principal
-- [src/content/site-content.ts](D:/DEV/Proyectos/GalfreDev/galfre-dev-next/src/content/site-content.ts): textos, CTA, links, certificados y contenido editable
-- [src/app/api/lead/route.ts](D:/DEV/Proyectos/GalfreDev/galfre-dev-next/src/app/api/lead/route.ts): captura de leads con mitigaciones básicas de abuso
-- [src/app/login/page.tsx](D:/DEV/Proyectos/GalfreDev/galfre-dev-next/src/app/login/page.tsx): acceso secundario
-- [src/app/perfil/page.tsx](D:/DEV/Proyectos/GalfreDev/galfre-dev-next/src/app/perfil/page.tsx): perfil autenticado
-- [src/lib/supabase](D:/DEV/Proyectos/GalfreDev/galfre-dev-next/src/lib/supabase): clientes SSR/browser y middleware
-- [data/schema.sql](D:/DEV/Proyectos/GalfreDev/galfre-dev-next/data/schema.sql): esquema base para Supabase
+- [`src/app`](./src/app): rutas, metadata, API routes y páginas
+- [`src/components/sections`](./src/components/sections): secciones principales de la home
+- [`src/components/ui`](./src/components/ui): piezas reutilizables de interfaz
+- [`src/components/motion`](./src/components/motion): animaciones y wrappers visuales
+- [`src/content`](./src/content): contenido editable y configuración de secciones
+- [`src/lib`](./src/lib): utilidades, validaciones, auth, Supabase y helpers de dominio
+- [`data/schema.sql`](./data/schema.sql): esquema base actualizado de Supabase
+- [`data/migrations`](./data/migrations): migraciones SQL aditivas y seguras
 
 ## Supabase
 
-La app está pensada para trabajar con:
+La app está preparada para trabajar con estas tablas:
 
 - `profiles`
 - `user_preferences`
 - `lead_intake`
+- `lead_events`
 - `marketing_consents`
 
-El esquema actualizado está en [data/schema.sql](D:/DEV/Proyectos/GalfreDev/galfre-dev-next/data/schema.sql).
+El esquema completo vive en [`data/schema.sql`](./data/schema.sql).
 
-## Nota de integración
+Si querés evolucionar la base sin romper datos existentes, aplicá primero las migraciones de [`data/migrations`](./data/migrations).
 
-Para cerrar la integración final de auth social en producción todavía hacen falta, si no están configurados:
+## Flujo principal
 
-- credenciales OAuth de Google
-- credenciales OAuth de GitHub
-- credenciales OAuth de LinkedIn
-- URLs de callback correctas para local, preview y production
+1. el usuario llega a la landing
+2. puede escribir por WhatsApp o dejar una consulta
+3. el backend registra el lead y el consentimiento
+4. si inicia sesión, puede completar o editar su perfil
+5. la base queda lista para seguimiento y futuras automatizaciones
+
+## Deploy
+
+El proyecto está pensado para desplegar en Vercel.
+
+Antes de deployar:
+
+1. configurá las variables de entorno
+2. verificá los providers OAuth en Supabase si vas a usar acceso social
+3. corré `npm run check`
+4. aplicá la migración SQL pendiente si corresponde
+
+## Notas de mantenimiento
+
+- El contenido visible principal vive en [`src/content/site-content.ts`](./src/content/site-content.ts).
+- El contenido del onboarding/perfil vive en [`src/content/profile-content.ts`](./src/content/profile-content.ts).
+- Las constantes del dominio de leads viven en [`src/lib/lead-model.ts`](./src/lib/lead-model.ts).
+- Las validaciones de contacto y perfil están en [`src/lib/contact.ts`](./src/lib/contact.ts) y [`src/lib/profile.ts`](./src/lib/profile.ts).
+
+## Pendientes razonables para una próxima etapa
+
+- aplicar la migración de `lead_events` y metadata comercial en Supabase
+- empezar a registrar eventos de lead en backend
+- definir un panel interno simple para seguimiento comercial
+- instrumentar analítica de conversión con eventos reales

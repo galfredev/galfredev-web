@@ -17,6 +17,13 @@ type PreferencesRow = {
   interests_other: string | null
 }
 
+function getCookieValue(cookieHeader: string | null, name: string) {
+  return cookieHeader
+    ?.split('; ')
+    .find((cookie) => cookie.startsWith(`${name}=`))
+    ?.split('=')[1]
+}
+
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get('code')
@@ -26,75 +33,75 @@ export async function GET(request: Request) {
     return response
   }
 
-  const supabase = createServerClient(
-    env.supabaseUrl,
-    env.supabasePublishableKey,
-    {
-      cookies: {
-        get(name: string) {
-          return request.headers
-            .get('cookie')
-            ?.split('; ')
-            .find((cookie) => cookie.startsWith(`${name}=`))
-            ?.split('=')[1]
-        },
-        set(name: string, value: string, options: CookieOptions) {
-          response.cookies.set({ name, value, ...options })
-        },
-        remove(name: string, options: CookieOptions) {
-          response.cookies.set({ name, value: '', ...options })
+  try {
+    const supabase = createServerClient(
+      env.supabaseUrl,
+      env.supabasePublishableKey,
+      {
+        cookies: {
+          get(name: string) {
+            return getCookieValue(request.headers.get('cookie'), name)
+          },
+          set(name: string, value: string, options: CookieOptions) {
+            response.cookies.set({ name, value, ...options })
+          },
+          remove(name: string, options: CookieOptions) {
+            response.cookies.set({ name, value: '', ...options })
+          },
         },
       },
-    },
-  )
+    )
 
-  const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
 
-  if (error) {
+    if (error) {
+      return NextResponse.redirect(new URL('/login?error=auth', requestUrl.origin))
+    }
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user) {
+      return NextResponse.redirect(new URL('/login', requestUrl.origin))
+    }
+
+    const [{ data: profile }, { data: preferences }] = await Promise.all([
+      supabase
+        .from('profiles')
+        .select('full_name, company_name')
+        .eq('id', user.id)
+        .maybeSingle<ProfileRow>(),
+      supabase
+        .from('user_preferences')
+        .select(
+          'business_type, business_type_other, primary_need, primary_need_other, interests, interests_other',
+        )
+        .eq('user_id', user.id)
+        .maybeSingle<PreferencesRow>(),
+    ])
+
+    const nextPath = getPostLoginRedirect(
+      isProfileComplete({
+        fullName: profile?.full_name ?? null,
+        companyName: profile?.company_name ?? null,
+        businessType: preferences?.business_type ?? null,
+        businessTypeOther: preferences?.business_type_other ?? null,
+        primaryNeed: preferences?.primary_need ?? null,
+        primaryNeedOther: preferences?.primary_need_other ?? null,
+        interests: preferences?.interests ?? [],
+        interestsOther: preferences?.interests_other ?? null,
+      }),
+    )
+
+    const redirectResponse = NextResponse.redirect(new URL(nextPath, requestUrl.origin))
+
+    response.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set(cookie)
+    })
+
+    return redirectResponse
+  } catch {
     return NextResponse.redirect(new URL('/login?error=auth', requestUrl.origin))
   }
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
-    return NextResponse.redirect(new URL('/login', requestUrl.origin))
-  }
-
-  const [{ data: profile }, { data: preferences }] = await Promise.all([
-    supabase
-      .from('profiles')
-      .select('full_name, company_name')
-      .eq('id', user.id)
-      .maybeSingle<ProfileRow>(),
-    supabase
-      .from('user_preferences')
-      .select(
-        'business_type, business_type_other, primary_need, primary_need_other, interests, interests_other',
-      )
-      .eq('user_id', user.id)
-      .maybeSingle<PreferencesRow>(),
-  ])
-
-  const nextPath = getPostLoginRedirect(
-    isProfileComplete({
-      fullName: profile?.full_name ?? null,
-      companyName: profile?.company_name ?? null,
-      businessType: preferences?.business_type ?? null,
-      businessTypeOther: preferences?.business_type_other ?? null,
-      primaryNeed: preferences?.primary_need ?? null,
-      primaryNeedOther: preferences?.primary_need_other ?? null,
-      interests: preferences?.interests ?? [],
-      interestsOther: preferences?.interests_other ?? null,
-    }),
-  )
-
-  const redirectResponse = NextResponse.redirect(new URL(nextPath, requestUrl.origin))
-
-  response.cookies.getAll().forEach((cookie) => {
-    redirectResponse.cookies.set(cookie)
-  })
-
-  return redirectResponse
 }

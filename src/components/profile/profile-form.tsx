@@ -141,7 +141,7 @@ export function ProfileForm({
     },
     {
       eyebrow: 'Paso 2',
-      title: 'Contexto de negocio para personalizar mejor diagnóstico, propuesta y seguimiento',
+      title: 'Contexto de negocio para personalizar mejor el diagnóstico, la propuesta y el seguimiento',
       description:
         'Con un poco de contexto podemos priorizar automatizaciones relevantes y evitar reuniones o mensajes innecesarios.',
     },
@@ -191,6 +191,10 @@ export function ProfileForm({
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
+    if (status === 'saving') {
+      return
+    }
+
     if (!validation.isValid) {
       setFieldErrors(validation.errors)
       setTopMessage('Revisá los campos marcados antes de guardar.')
@@ -220,11 +224,13 @@ export function ProfileForm({
         ok: boolean
         message: string
         redirectTo?: string
+        errors?: FieldErrors
       }
 
       if (!response.ok || !result.ok) {
         setStatus('error')
         setTopMessage(result.message)
+        setFieldErrors(result.errors ?? {})
         return
       }
 
@@ -396,9 +402,7 @@ export function ProfileForm({
                             {fieldErrors.fullName}
                           </p>
                         ) : (
-                          <p className="min-h-[3rem] text-sm text-transparent">
-                            .
-                          </p>
+                          <p className="min-h-[3rem] text-sm text-transparent">.</p>
                         )}
                       </label>
 
@@ -452,7 +456,7 @@ export function ProfileForm({
                   >
                     <OptionGroup
                       label="Rubro o tipo de negocio"
-                      helper="Elegí lo más cercano. Si no encaja, escribilo con tus palabras."
+                      helper="Elegí la opción más cercana. Si no encaja, escribila con tus palabras."
                       options={profileBusinessTypeOptions}
                       value={form.businessType}
                       onChange={(value) => updateField('businessType', value)}
@@ -464,7 +468,7 @@ export function ProfileForm({
 
                     <OptionGroup
                       label="Tamaño del equipo"
-                      helper="Esto ayuda a estimar nivel de operación y prioridad de automatización."
+                      helper="Esto ayuda a estimar el nivel de operación y la prioridad de automatización."
                       options={profileTeamSizeOptions}
                       value={form.teamSize}
                       onChange={(value) => updateField('teamSize', value)}
@@ -568,7 +572,7 @@ export function ProfileForm({
                           {
                             key: 'profilingConsent' as const,
                             label:
-                              'Acepto que esta información se use para personalizar diagnóstico y propuesta.',
+                              'Acepto que esta información se use para personalizar el diagnóstico y la propuesta.',
                           },
                         ].map((item) => {
                           const active = form[item.key]

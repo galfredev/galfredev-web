@@ -1,4 +1,4 @@
-import { InteractivePanel } from '@/components/motion/interactive-panel'
+import { BorderGlowCard } from '@/components/motion/border-glow-card'
 import { Reveal } from '@/components/motion/reveal'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { valuePillars } from '@/content/site-content'
@@ -18,7 +18,7 @@ export function ValueSection() {
         <div className="mt-10 grid gap-4 lg:grid-cols-3">
           {valuePillars.map((pillar, index) => (
             <Reveal key={pillar.title} delay={index * 0.06}>
-              <InteractivePanel className="h-full p-6">
+              <BorderGlowCard className="h-full p-6">
                 <div className="inline-flex rounded-full border border-white/10 bg-black/20 px-3 py-1 text-[11px] uppercase tracking-[0.22em] text-white/40">
                   {pillar.icon ?? `0${index + 1}`}
                 </div>
@@ -36,7 +36,7 @@ export function ValueSection() {
                     </li>
                   ))}
                 </ul>
-              </InteractivePanel>
+              </BorderGlowCard>
             </Reveal>
           ))}
         </div>

@@ -19,7 +19,7 @@ export async function ProfileTeaserSection() {
               <h2 className="max-w-2xl text-3xl font-semibold tracking-[-0.06em] text-white">
                 {isAuthenticated
                   ? 'Tu perfil quedó integrado al sitio para volver cuando quieras y mantener tu contexto actualizado.'
-                  : 'Un acceso simple para guardar tu contexto y retomar la conversación con mejor diagnóstico.'}
+                  : 'Un acceso simple para guardar tu contexto y retomar la conversación con un mejor diagnóstico.'}
               </h2>
               <p className="max-w-2xl text-sm leading-7 text-white/58">
                 {isAuthenticated
@@ -38,7 +38,7 @@ export async function ProfileTeaserSection() {
               <div className="rounded-full border border-white/12 px-4 py-3 text-center text-sm text-white/62">
                 {isAuthenticated
                   ? `Sesión activa · ${userContext?.authUser.providerLabel ?? 'Acceso'}`
-                  : 'Google · GitHub · LinkedIn · Magic link'}
+                  : 'Google · GitHub · LinkedIn · Enlace mágico'}
               </div>
             </div>
           </InteractivePanel>
