@@ -8,7 +8,6 @@ import { ProcessSection } from '@/components/sections/process-section'
 import { ProfileTeaserSection } from '@/components/sections/profile-teaser-section'
 import { RoiCalculatorSection } from '@/components/sections/roi-calculator-section'
 import { SolutionsSection } from '@/components/sections/solutions-section'
-import { ValueSection } from '@/components/sections/value-section'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -34,7 +33,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
       <div id="top" />
       <main id="contenido-principal" className="relative overflow-hidden">
         <HeroSection />
-        <ValueSection />
         <SolutionsSection />
         <ProcessSection />
         <RoiCalculatorSection />
