@@ -218,21 +218,21 @@ export const valuePillars: ValuePillar[] = [
     icon: '01',
     title: 'Responder rápido',
     summary:
-      'WhatsApp, respuestas automáticas y recordatorios para no dejar que las consultas se enfríen.',
+      'WhatsApp, respuestas automáticas y recordatorios para que una consulta no se enfríe por demora.',
     points: ['Respuesta automática por WhatsApp', 'Seguimiento sin olvidos'],
   },
   {
     icon: '02',
     title: 'Ordenar procesos',
     summary:
-      'Conecto herramientas, formularios y sistemas para que el negocio tenga una sola lógica.',
+      'Conecto herramientas, formularios y sistemas para que la operación deje de depender de parches.',
     points: ['Menos doble carga', 'Menos errores operativos'],
   },
   {
     icon: '03',
     title: 'Escalar con criterio',
     summary:
-      'Cuando lo estándar no alcanza, diseño la pieza de software necesaria para que el proceso escale.',
+      'Cuando lo estándar no alcanza, diseñamos la pieza justa para crecer con una base más sólida.',
     points: ['Integración con tu caso real', 'Base mantenible y lista para crecer'],
   },
 ]
@@ -288,22 +288,23 @@ export const processSteps: ProcessStep[] = [
   {
     step: '01',
     title: 'Diagnóstico de negocio',
-    description: 'Detectamos dónde hoy se pierde tiempo, control o facturación.',
-    outcome: 'Salimos con una lectura clara del problema y del impacto esperado.',
+    description:
+      'Ubicamos dónde hoy se pierde tiempo, control o facturación y qué conviene atacar primero.',
+    outcome: 'Queda definido el problema real, la prioridad y el impacto que vale la pena buscar.',
   },
   {
     step: '02',
     title: 'Implementación enfocada',
     description:
-      'Armamos la solución con el nivel justo de automatización, integración o software.',
-    outcome: 'Se pone en marcha rápido, sin sobreingeniería.',
+      'Armamos la solución con el nivel justo de automatización, integración o software, sin adornos innecesarios.',
+    outcome: 'Se pone en marcha rápido y con sentido operativo, no como una capa extra de complejidad.',
   },
   {
     step: '03',
     title: 'Ajuste y mejora continua',
     description:
-      'Medimos qué funcionó, corregimos fricción y definimos el siguiente paso útil.',
-    outcome: 'El sistema acompaña el crecimiento, no se queda congelado.',
+      'Medimos qué funcionó, corregimos fricción real y definimos el siguiente paso útil según uso.',
+    outcome: 'La solución se mantiene viva y acompaña el crecimiento sin quedar congelada.',
   },
 ]
 

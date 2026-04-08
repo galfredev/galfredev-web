@@ -74,7 +74,6 @@ function RoiProjectionChart({
 }: {
   monthlySavingsArs: number
 }) {
-  const reducedMotion = useReducedMotion()
   const data = useMemo(
     () =>
       Array.from({ length: 12 }, (_, index) => ({
@@ -156,32 +155,23 @@ function RoiProjectionChart({
           )
         })}
 
-        <motion.path
+        <path
           d={areaPath}
           fill="url(#roi-fill)"
-          initial={reducedMotion ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          opacity="1"
         />
-        <motion.path
+        <path
           d={linePath}
           fill="none"
           stroke="url(#roi-line)"
           strokeWidth="4"
           strokeLinecap="round"
           strokeLinejoin="round"
-          initial={reducedMotion ? false : { pathLength: 0, opacity: 0.4 }}
-          animate={{ pathLength: 1, opacity: 1 }}
-          transition={{ duration: reducedMotion ? 0.2 : 1.1, ease: [0.22, 1, 0.36, 1] }}
+          opacity="1"
         />
 
-        {points.map((point, index) => (
-          <motion.g
-            key={point.month}
-            initial={reducedMotion ? false : { opacity: 0, scale: 0.7 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: reducedMotion ? 0 : 0.28 + index * 0.04, duration: 0.24 }}
-          >
+        {points.map((point) => (
+          <g key={point.month}>
             <circle
               cx={point.x}
               cy={point.y}
@@ -190,7 +180,7 @@ function RoiProjectionChart({
               stroke="rgba(45,212,191,0.9)"
               strokeWidth="3"
             />
-          </motion.g>
+          </g>
         ))}
 
         {points.map((point) => (
