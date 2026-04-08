@@ -28,16 +28,15 @@ export default async function LoginPage() {
   return (
     <>
       <SiteHeader />
-      <main id="contenido-principal" className="px-4 pb-18 pt-28 sm:px-6 lg:px-8 lg:pt-32">
-        <div className="mx-auto grid min-h-[80svh] max-w-7xl items-center gap-10 lg:grid-cols-[0.88fr_1.12fr]">
-          <div className="space-y-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-accent)]">
-              Acceso liviano
-            </p>
-            <h1 className="max-w-2xl text-balance text-5xl font-semibold tracking-[-0.08em] text-white sm:text-6xl">
+      <main id="contenido-principal" className="relative overflow-hidden px-4 pb-18 pt-28 sm:px-6 lg:px-8 lg:pt-32">
+        <div className="absolute inset-x-0 top-0 h-[520px] bg-[radial-gradient(circle_at_top,rgba(31,127,115,0.18),transparent_42%),radial-gradient(circle_at_78%_12%,rgba(255,180,106,0.08),transparent_22%)]" />
+        <div className="relative mx-auto grid min-h-[80svh] max-w-7xl items-center gap-10 lg:grid-cols-[0.88fr_1.12fr]">
+          <div className="space-y-7">
+            <p className="section-kicker">Acceso liviano</p>
+            <h1 className="max-w-[10.5ch] text-balance text-[3.3rem] font-semibold leading-[0.94] tracking-[-0.08em] text-white sm:text-[4.3rem]">
               Ingresá una vez y dejá tu contexto listo para que la próxima conversación avance más rápido.
             </h1>
-            <p className="max-w-xl text-lg leading-8 text-white/60">
+            <p className="max-w-xl text-lg leading-8 text-[var(--text-faint)]">
               El perfil sirve para guardar datos básicos, entender mejor tu operación y adaptar diagnósticos o propuestas sin convertir el sitio en un portal complejo.
             </p>
           </div>

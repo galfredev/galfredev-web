@@ -16,19 +16,29 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        'max-w-3xl space-y-5',
+        'max-w-3xl space-y-6',
         align === 'center' && 'mx-auto text-center',
       )}
     >
-      <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--color-accent)]">
+      <p
+        className={cn(
+          'section-kicker',
+          align === 'center' && 'justify-center',
+        )}
+      >
         {eyebrow}
       </p>
       <div className="space-y-4">
-        <h2 className="text-balance text-3xl font-semibold tracking-[-0.06em] text-white sm:text-4xl lg:text-5xl">
+        <h2 className="text-balance text-3xl font-semibold leading-[0.96] tracking-[-0.07em] text-white sm:text-4xl lg:text-[3.35rem]">
           {title}
         </h2>
         {description ? (
-          <p className="text-pretty text-base leading-7 text-white/66 sm:text-lg">
+          <p
+            className={cn(
+              'max-w-2xl text-pretty text-base leading-8 text-[var(--text-faint)] sm:text-lg',
+              align === 'center' && 'mx-auto',
+            )}
+          >
             {description}
           </p>
         ) : null}

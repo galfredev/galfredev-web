@@ -1,8 +1,8 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { motion } from 'framer-motion'
-import type { ReactNode } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
+import { useSyncExternalStore, type ReactNode } from 'react'
 
 type RevealProps = {
   children: ReactNode
@@ -10,6 +10,7 @@ type RevealProps = {
   delay?: number
   y?: number
   id?: string
+  variant?: 'hero' | 'section' | 'surface'
 }
 
 export function Reveal({
@@ -17,14 +18,40 @@ export function Reveal({
   className,
   delay = 0,
   y = 20,
+  variant = 'section',
   ...props
 }: RevealProps) {
+  const reduceMotion = useReducedMotion()
+  const hydrated = useSyncExternalStore(
+    () => () => undefined,
+    () => true,
+    () => false,
+  )
+
+  const variantMap = {
+    hero: { y: 24, duration: 0.92, amount: 0.15, scale: 0.985 },
+    section: { y, duration: 0.82, amount: 0.2, scale: 0.992 },
+    surface: { y: Math.max(12, y - 4), duration: 0.72, amount: 0.18, scale: 0.996 },
+  } as const
+
+  const config = variantMap[variant]
+
   return (
     <motion.div
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.82, ease: [0.16, 1, 0.3, 1], delay }}
+      initial={
+        hydrated
+          ? reduceMotion
+            ? { opacity: 0 }
+            : { opacity: 0, y: config.y, scale: config.scale, filter: 'blur(10px)' }
+          : false
+      }
+      whileInView={
+        reduceMotion
+          ? { opacity: 1 }
+          : { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }
+      }
+      viewport={{ once: true, amount: config.amount }}
+      transition={{ duration: reduceMotion ? 0.38 : config.duration, ease: [0.22, 1, 0.36, 1], delay }}
       className={cn(className)}
       {...props}
     >

@@ -30,9 +30,13 @@ export function BorderGlowCard({ children, className }: BorderGlowCardProps) {
 
   const glowX = useTransform(smoothX, (value) => `${value * 100}%`)
   const glowY = useTransform(smoothY, (value) => `${value * 100}%`)
-  const borderGlow = useMotionTemplate`radial-gradient(260px circle at ${glowX} ${glowY}, rgba(31,127,115,0.42), transparent 58%)`
+  const borderGlow = useMotionTemplate`radial-gradient(320px circle at ${glowX} ${glowY}, rgba(61,221,196,0.2), transparent 62%)`
+  const ambientGlow = useMotionTemplate`radial-gradient(180px circle at ${glowX} ${glowY}, rgba(255,255,255,0.08), transparent 52%)`
+  const accentGlow = useMotionTemplate`radial-gradient(220px circle at ${glowX} ${glowY}, rgba(61,221,196,0.14), transparent 48%)`
   const enableMotion = hydrated && !reduceMotion
-  const fallbackBackground = 'linear-gradient(180deg,rgba(31,127,115,0.12),transparent 42%)'
+  const tiltX = useTransform(smoothY, [0, 1], enableMotion ? [2.4, -2.4] : [0, 0])
+  const tiltY = useTransform(smoothX, [0, 1], enableMotion ? [-2.8, 2.8] : [0, 0])
+  const fallbackBackground = 'linear-gradient(180deg,rgba(61,221,196,0.07),transparent 38%)'
 
   return (
     <motion.div
@@ -49,10 +53,11 @@ export function BorderGlowCard({ children, className }: BorderGlowCardProps) {
         pointerX.set(0.5)
         pointerY.set(0.5)
       }}
-      whileHover={enableMotion ? { y: -3 } : undefined}
-      transition={{ duration: 0.22 }}
+      style={enableMotion ? { rotateX: tiltX, rotateY: tiltY, transformStyle: 'preserve-3d' } : undefined}
+      whileHover={enableMotion ? { y: -6, scale: 1.008 } : undefined}
+      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        'group relative overflow-hidden rounded-[30px] border border-white/8 bg-white/5',
+        'surface-panel surface-panel-soft surface-panel-interactive group active:scale-[0.99]',
         className,
       )}
     >
@@ -61,10 +66,19 @@ export function BorderGlowCard({ children, className }: BorderGlowCardProps) {
         style={{
           background: enableMotion ? borderGlow : fallbackBackground,
         }}
-        className="pointer-events-none absolute inset-0 opacity-0 transition duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100"
       />
-      <div className="pointer-events-none absolute inset-[1px] rounded-[29px] border border-[rgba(31,127,115,0.14)] opacity-70" />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),transparent_30%)]" />
+      <motion.div
+        aria-hidden
+        style={{ background: enableMotion ? ambientGlow : 'transparent' }}
+        className="pointer-events-none absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100"
+      />
+      <motion.div
+        aria-hidden
+        style={{ background: enableMotion ? accentGlow : 'transparent' }}
+        className="pointer-events-none absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100"
+      />
+      <div className="pointer-events-none absolute inset-[1px] rounded-[calc(2rem-1px)] border border-[rgba(61,221,196,0.08)] opacity-70" />
       <div className="relative">{children}</div>
     </motion.div>
   )

@@ -34,10 +34,10 @@ function CertificationShowcase() {
             onFocus={() => setActiveId(certification.id)}
             onClick={() => setDialogId(certification.id)}
             className={[
-              'w-full rounded-[24px] border p-4 text-left transition',
+              'w-full rounded-[1.45rem] border p-4 text-left transition duration-300',
               activeId === certification.id
                 ? 'border-[var(--color-accent)]/24 bg-[var(--color-accent)]/8'
-                : 'border-white/8 bg-white/5 hover:border-white/16 hover:bg-white/7',
+                : 'border-white/8 bg-white/[0.04] hover:border-white/16 hover:bg-white/[0.06]',
             ].join(' ')}
           >
             <p className="text-sm font-medium text-white">{certification.title}</p>
@@ -68,7 +68,7 @@ function CertificationShowcase() {
               Ampliar
             </button>
           </div>
-          <div className="relative aspect-[4/3] overflow-hidden rounded-[20px] border border-white/8">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-[1.35rem] border border-white/8">
             <Image
               src={activeCertification.image}
               alt={`Certificado ${activeCertification.title}`}
@@ -94,13 +94,11 @@ function CertificationShowcase() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.2 }}
-              className="relative w-full max-w-5xl overflow-hidden rounded-[28px] border border-white/10 bg-[rgba(8,12,20,0.96)] p-4"
+              className="page-panel relative w-full max-w-5xl overflow-hidden rounded-[1.8rem] p-4"
             >
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                 <div className="text-left">
-                  <p className="text-lg font-medium text-white">
-                    {dialogCertification.title}
-                  </p>
+                  <p className="text-lg font-medium text-white">{dialogCertification.title}</p>
                   <p className="mt-1 text-sm text-white/48">
                     {dialogCertification.issuer} · {dialogCertification.date}
                   </p>
@@ -109,7 +107,7 @@ function CertificationShowcase() {
                   Tocá afuera para cerrar
                 </span>
               </div>
-              <div className="relative aspect-[16/10] overflow-hidden rounded-[20px] border border-white/8">
+              <div className="relative aspect-[16/10] overflow-hidden rounded-[1.35rem] border border-white/8">
                 <Image
                   src={dialogCertification.image}
                   alt={`Certificado ${dialogCertification.title}`}
@@ -129,7 +127,7 @@ export function FounderSection() {
   return (
     <section id="fundador" className="px-4 py-22 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <Reveal>
+        <Reveal variant="section">
           <SectionHeading
             eyebrow="Valentino Galfre"
             title="Ingeniería, automatización e implementación real para negocios que necesitan avanzar en serio."
@@ -138,10 +136,10 @@ export function FounderSection() {
         </Reveal>
 
         <div className="mt-12 grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-          <Reveal className="space-y-6">
+          <Reveal className="space-y-6" variant="surface">
             <BorderGlowCard className="p-4">
               <div className="absolute inset-x-8 top-0 h-32 rounded-full bg-[radial-gradient(circle,rgba(61,221,196,0.22),transparent_62%)] blur-3xl" />
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))]">
+              <div className="relative aspect-[4/5] overflow-hidden rounded-[1.7rem] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))]">
                 <Image
                   src={siteCopy.founderImage}
                   alt="Valentino Galfre"
@@ -187,7 +185,7 @@ export function FounderSection() {
           </Reveal>
 
           <div className="space-y-6">
-            <Reveal>
+            <Reveal variant="surface">
               <InteractivePanel className="p-6">
                 <p className="text-lg leading-8 text-white/72">
                   <BlurHighlight
@@ -200,7 +198,7 @@ export function FounderSection() {
                     <motion.div
                       key={item}
                       whileHover={{ x: 4 }}
-                      className="rounded-[22px] border border-white/8 bg-black/18 px-4 py-3 text-sm text-white/74"
+                      className="rounded-[1.35rem] border border-white/8 bg-black/18 px-4 py-3 text-sm text-white/74"
                     >
                       {item}
                     </motion.div>
@@ -209,7 +207,7 @@ export function FounderSection() {
               </InteractivePanel>
             </Reveal>
 
-            <Reveal delay={0.05} className="grid gap-4 sm:grid-cols-3">
+            <Reveal delay={0.05} className="grid gap-4 sm:grid-cols-3" variant="surface">
               {stackGroups.map((group, index) => {
                 const Icon = stackIcons[index] ?? Code2
 
@@ -234,13 +232,11 @@ export function FounderSection() {
               })}
             </Reveal>
 
-            <Reveal delay={0.08}>
+            <Reveal delay={0.08} variant="surface">
               <InteractivePanel className="p-6">
                 <div className="mb-6">
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-accent)]">
-                    Certificaciones
-                  </p>
-                  <p className="mt-2 max-w-2xl text-sm leading-7 text-white/58">
+                  <p className="section-kicker">Certificaciones</p>
+                  <p className="mt-3 max-w-2xl text-sm leading-7 text-white/58">
                     Se mantienen visibles e interactivas para reforzar confianza sin llenar la sección de texto.
                   </p>
                 </div>

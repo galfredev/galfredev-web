@@ -15,24 +15,23 @@ export default function TermsPage() {
   return (
     <>
       <SiteHeader />
-      <main id="contenido-principal" className="px-4 pb-18 pt-28 sm:px-6 lg:px-8 lg:pt-32">
-        <article className="mx-auto max-w-4xl rounded-[34px] border border-white/8 bg-white/5 p-6 sm:p-8 lg:p-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--color-accent)]">
-            Términos
-          </p>
-          <h1 className="mt-4 text-4xl font-semibold tracking-[-0.06em] text-white">
+      <main id="contenido-principal" className="relative overflow-hidden px-4 pb-18 pt-28 sm:px-6 lg:px-8 lg:pt-32">
+        <div className="absolute inset-x-0 top-0 h-[440px] bg-[radial-gradient(circle_at_top,rgba(31,127,115,0.16),transparent_38%)]" />
+        <article className="page-panel relative mx-auto max-w-4xl p-6 sm:p-8 lg:p-10">
+          <p className="section-kicker">Términos</p>
+          <h1 className="mt-5 text-4xl font-semibold tracking-[-0.06em] text-white sm:text-[3.3rem]">
             Términos de uso
           </h1>
-          <div className="mt-8 space-y-8 text-sm leading-8 text-white/66">
+          <div className="legal-prose mt-8">
             <section>
-              <h2 className="text-lg font-medium text-white">Objeto del sitio</h2>
+              <h2>Objeto del sitio</h2>
               <p>
                 Esta web presenta los servicios, soluciones, metodología y canales de contacto de GalfreDev.
                 No constituye una plataforma SaaS pública ni un entorno contractual automático por sí mismo.
               </p>
             </section>
             <section>
-              <h2 className="text-lg font-medium text-white">Uso permitido</h2>
+              <h2>Uso permitido</h2>
               <p>
                 La persona visitante puede navegar, calcular escenarios de ROI, dejar datos de contacto,
                 iniciar sesión en su perfil y solicitar información. Queda prohibido el uso abusivo
@@ -40,7 +39,7 @@ export default function TermsPage() {
               </p>
             </section>
             <section>
-              <h2 className="text-lg font-medium text-white">Propuestas y alcances</h2>
+              <h2>Propuestas y alcances</h2>
               <p>
                 Toda propuesta comercial, alcance, presupuesto o implementación se define caso por caso.
                 El contenido del sitio no reemplaza una evaluación específica del negocio ni constituye
@@ -48,7 +47,7 @@ export default function TermsPage() {
               </p>
             </section>
             <section>
-              <h2 className="text-lg font-medium text-white">Disponibilidad</h2>
+              <h2>Disponibilidad</h2>
               <p>
                 GalfreDev podrá actualizar, modificar o retirar secciones, textos, funcionalidades o
                 mecanismos de acceso cuando resulte necesario para mantener el sitio seguro, claro y vigente.

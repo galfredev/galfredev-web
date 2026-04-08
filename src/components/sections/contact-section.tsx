@@ -49,10 +49,7 @@ export function ContactSection() {
     return () => window.clearTimeout(timeoutId)
   }, [status, whatsAppHref])
 
-  function updateField<K extends keyof LeadFormState>(
-    key: K,
-    value: LeadFormState[K],
-  ) {
+  function updateField<K extends keyof LeadFormState>(key: K, value: LeadFormState[K]) {
     setForm((current) => ({ ...current, [key]: value }))
     setFieldErrors((current) => ({ ...current, [key]: undefined }))
 
@@ -122,15 +119,14 @@ export function ContactSection() {
 
   return (
     <section id="contacto" className="px-4 py-22 sm:px-6 lg:px-8">
-      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.8fr_1.2fr]">
-        <Reveal>
+      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.78fr_1.22fr]">
+        <Reveal variant="section">
           <SectionHeading
             eyebrow="Contacto"
             title="Si querés ordenar, automatizar o escalar, lo seguimos por WhatsApp."
-            description=""
           />
 
-          <p className="mt-5 max-w-2xl text-pretty text-base leading-7 text-white/66 sm:text-lg">
+          <p className="mt-5 max-w-2xl text-pretty text-base leading-7 text-[var(--text-soft)] sm:text-lg">
             <BlurHighlight
               text="La web resuelve el primer paso: mostrar qué hace GalfreDev, darte contexto y permitirte pedir un diagnóstico o una propuesta de forma clara. El cierre ideal es una conversación real."
               highlightWords={[
@@ -150,10 +146,10 @@ export function ContactSection() {
               )}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-slate-950 transition hover:bg-[var(--color-accent-strong)]"
+              className="group inline-flex items-center gap-2 rounded-full border border-[rgba(61,221,196,0.18)] bg-[linear-gradient(180deg,rgba(50,148,134,0.98),rgba(31,127,115,0.92))] px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_14px_40px_rgba(31,127,115,0.18)] transition duration-300 hover:translate-y-[-1px] hover:shadow-[0_18px_48px_rgba(31,127,115,0.24)]"
             >
               Hablar por WhatsApp
-              <ArrowRight size={16} />
+              <ArrowRight size={16} className="transition duration-300 group-hover:translate-x-0.5" />
             </a>
             <p className="max-w-md text-sm leading-7 text-white/56">
               También podés dejar tus datos y la necesidad principal para que el contacto salga con mejor contexto, prioridad y consentimiento explícito.
@@ -161,11 +157,11 @@ export function ContactSection() {
           </div>
         </Reveal>
 
-        <Reveal delay={0.06}>
+        <Reveal delay={0.06} variant="surface">
           <form
             noValidate
             onSubmit={handleSubmit}
-            className="rounded-[34px] border border-white/8 bg-[rgba(8,12,20,0.84)] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.28)] backdrop-blur-xl sm:p-8"
+            className="page-panel rounded-[2rem] p-6 sm:p-8"
           >
             <div className="grid gap-4 md:grid-cols-2">
               <TextInputField
@@ -255,7 +251,7 @@ export function ContactSection() {
               className="sr-only"
             />
 
-            <div className="mt-5 grid gap-3 rounded-[26px] border border-white/8 bg-white/[0.03] p-4">
+            <div className="mt-5 grid gap-3 rounded-[1.6rem] border border-white/8 bg-white/[0.03] p-4">
               <ConsentCheckboxCard
                 checked={form.consentFollowUp}
                 disabled={status === 'loading'}
@@ -282,7 +278,7 @@ export function ContactSection() {
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="rounded-full bg-[var(--color-accent)] px-5 py-3 text-sm font-medium text-slate-950 transition hover:bg-[var(--color-accent-strong)] disabled:cursor-not-allowed disabled:opacity-70"
+                className="group rounded-full border border-[rgba(61,221,196,0.18)] bg-[linear-gradient(180deg,rgba(50,148,134,0.98),rgba(31,127,115,0.92))] px-5 py-3 text-sm font-semibold text-slate-950 transition duration-300 hover:translate-y-[-1px] hover:shadow-[0_14px_38px_rgba(31,127,115,0.22)] disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {status === 'loading' ? 'Enviando...' : 'Pedir propuesta o diagnóstico'}
               </button>
@@ -290,7 +286,7 @@ export function ContactSection() {
                 href={directWhatsAppHref}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-full border border-white/12 px-5 py-3 text-sm text-white/82 transition hover:border-white/24 hover:text-white"
+                className="rounded-full border border-white/12 bg-white/[0.03] px-5 py-3 text-sm text-white/82 transition duration-300 hover:border-white/24 hover:text-white"
               >
                 Ir directo a WhatsApp
               </a>
@@ -300,7 +296,7 @@ export function ContactSection() {
               <div
                 aria-live="polite"
                 className={[
-                  'mt-5 rounded-[22px] border px-4 py-4 text-sm',
+                  'mt-5 rounded-[1.35rem] border px-4 py-4 text-sm',
                   status === 'success'
                     ? 'border-emerald-400/20 bg-emerald-400/8 text-emerald-100'
                     : 'border-rose-400/20 bg-rose-400/8 text-rose-100',

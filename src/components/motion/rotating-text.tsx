@@ -66,7 +66,9 @@ export function RotatingText({
         {hydrated ? (
           <motion.span
             key={activeWord}
-            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10, scale: 0.992 }}
+            initial={
+              reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.992, filter: 'blur(12px)' }
+            }
             animate={
               reduceMotion
                 ? { opacity: 1 }
@@ -74,11 +76,14 @@ export function RotatingText({
                     opacity: 1,
                     y: 0,
                     scale: 1,
+                    filter: 'blur(0px)',
                     textShadow: '0 0 24px rgba(31,127,115,0.14)',
                   }
             }
-            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -10, scale: 0.996 }}
-            transition={{ duration: 0.74, ease: [0.16, 1, 0.3, 1] }}
+            exit={
+              reduceMotion ? { opacity: 0 } : { opacity: 0, y: -12, scale: 0.996, filter: 'blur(10px)' }
+            }
+            transition={{ duration: 0.82, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0 block text-[var(--color-accent)] will-change-transform"
           >
             {activeWord}
