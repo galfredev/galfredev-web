@@ -1,36 +1,34 @@
 export type RoiInputs = {
   repetitiveHoursPerWeek: number
-  monthlyCostArs: number
-  averageTicketArs: number
+  monthlySalaryArs: number
 }
 
 export type RoiOutputs = {
+  monthlyRepetitiveCostArs: number
+  monthlySavingsArs: number
+  annualSavingsArs: number
   monthlyHoursRecovered: number
-  monthlyRecoveredValue: number
-  monthlyOperationalSavings: number
-  totalMonthlyImpactArs: number
-  annualImpactArs: number
 }
 
-const TIME_RECOVERY_RATIO = 0.55
-const TASK_AUTOMATION_RATIO = 0.45
-const REVENUE_LEAKAGE_RATIO = 0.12
+const MONTHLY_WORK_HOURS = 160
+const WEEKS_PER_MONTH = 4
+const AUTOMATION_EFFICIENCY = 0.85
 
 export function calculateRoi(inputs: RoiInputs): RoiOutputs {
+  const monthlyRepetitiveCostArs =
+    (inputs.monthlySalaryArs / MONTHLY_WORK_HOURS) *
+    inputs.repetitiveHoursPerWeek *
+    WEEKS_PER_MONTH
+
+  const monthlySavingsArs = monthlyRepetitiveCostArs * AUTOMATION_EFFICIENCY
+  const annualSavingsArs = monthlySavingsArs * 12
   const monthlyHoursRecovered =
-    inputs.repetitiveHoursPerWeek * 4.33 * TIME_RECOVERY_RATIO
-  const monthlyOperationalSavings =
-    inputs.monthlyCostArs * TASK_AUTOMATION_RATIO
-  const monthlyRecoveredValue =
-    inputs.averageTicketArs * REVENUE_LEAKAGE_RATIO
-  const totalMonthlyImpactArs =
-    monthlyOperationalSavings + monthlyRecoveredValue
+    inputs.repetitiveHoursPerWeek * WEEKS_PER_MONTH * AUTOMATION_EFFICIENCY
 
   return {
+    monthlyRepetitiveCostArs,
+    monthlySavingsArs,
+    annualSavingsArs,
     monthlyHoursRecovered,
-    monthlyRecoveredValue,
-    monthlyOperationalSavings,
-    totalMonthlyImpactArs,
-    annualImpactArs: totalMonthlyImpactArs * 12,
   }
 }
