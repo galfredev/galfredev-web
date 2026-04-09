@@ -1,7 +1,7 @@
 import { env, hasSupabaseEnv } from '@/lib/env'
 import { getPostLoginRedirect, isProfileComplete } from '@/lib/profile'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 type ProfileRow = {
   full_name: string | null
@@ -17,14 +17,7 @@ type PreferencesRow = {
   interests_other: string | null
 }
 
-function getCookieValue(cookieHeader: string | null, name: string) {
-  return cookieHeader
-    ?.split('; ')
-    .find((cookie) => cookie.startsWith(`${name}=`))
-    ?.split('=')[1]
-}
-
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get('code')
   const response = NextResponse.redirect(new URL('/', requestUrl.origin))
@@ -40,7 +33,7 @@ export async function GET(request: Request) {
       {
         cookies: {
           get(name: string) {
-            return getCookieValue(request.headers.get('cookie'), name)
+            return request.cookies.get(name)?.value
           },
           set(name: string, value: string, options: CookieOptions) {
             response.cookies.set({ name, value, ...options })

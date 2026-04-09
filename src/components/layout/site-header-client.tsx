@@ -77,6 +77,7 @@ function NavLinkItem({
     return (
       <Link
         href={href}
+        prefetch={false}
         onClick={onNavigate}
         className={baseClasses}
         aria-current={active ? 'page' : undefined}
@@ -240,7 +241,7 @@ export function SiteHeaderClient({ navItems, authUser }: SiteHeaderClientProps) 
           ].join(' ')}
         />
 
-        <Link href="/#top" className="relative z-10 flex items-center gap-3">
+        <Link href="/#top" prefetch={false} className="relative z-10 flex items-center gap-3">
           <span className="inline-flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-sm font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
             GD
           </span>
@@ -312,20 +313,20 @@ export function SiteHeaderClient({ navItems, authUser }: SiteHeaderClientProps) 
                     </div>
 
                     <div className="mt-4 grid gap-2">
-                      <Link
+                      <a
                         href="/perfil"
                         className="rounded-[1.2rem] border border-white/8 bg-white/[0.03] px-4 py-3 text-sm text-white/82 transition duration-300 hover:border-white/14 hover:bg-white/[0.06]"
                         onClick={() => setMenuOpen(false)}
                       >
                         {profileLabel}
-                      </Link>
-                      <Link
+                      </a>
+                      <a
                         href="/auth/signout"
                         className="rounded-[1.2rem] border border-white/8 bg-white/[0.02] px-4 py-3 text-sm text-white/58 transition duration-300 hover:border-white/14 hover:bg-white/[0.06] hover:text-white"
                         onClick={() => setMenuOpen(false)}
                       >
                         Cerrar sesión
-                      </Link>
+                      </a>
                     </div>
                   </motion.div>
                 ) : null}
@@ -334,6 +335,7 @@ export function SiteHeaderClient({ navItems, authUser }: SiteHeaderClientProps) 
           ) : (
             <Link
               href="/login"
+              prefetch={false}
               className="rounded-full border border-white/12 bg-white/[0.035] px-4 py-2.5 text-sm text-white/76 transition duration-300 hover:border-white/18 hover:bg-white/[0.06] hover:text-white"
             >
               Acceso
@@ -401,16 +403,17 @@ export function SiteHeaderClient({ navItems, authUser }: SiteHeaderClientProps) 
               </a>
 
               {authUser ? (
-                <Link
+                <a
                   href="/auth/signout"
                   onClick={() => setOpen(false)}
                   className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-3 text-center text-sm text-white/82"
                 >
                   Cerrar sesión
-                </Link>
+                </a>
               ) : (
                 <Link
                   href="/login"
+                  prefetch={false}
                   onClick={() => setOpen(false)}
                   className="rounded-full border border-white/10 bg-white/[0.03] px-4 py-3 text-center text-sm text-white/82"
                 >

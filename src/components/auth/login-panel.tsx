@@ -78,11 +78,19 @@ export function LoginPanel() {
     setMessage('')
 
     const supabase = createSupabaseBrowserClient()
+    const oauthOptions =
+      provider === 'google'
+        ? {
+            redirectTo: getRedirectTo(),
+            scopes: 'openid email profile https://www.googleapis.com/auth/userinfo.email',
+          }
+        : {
+            redirectTo: getRedirectTo(),
+          }
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: provider as never,
-      options: {
-        redirectTo: getRedirectTo(),
-      },
+      options: oauthOptions,
     })
 
     if (error) {
