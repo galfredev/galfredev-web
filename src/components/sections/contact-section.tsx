@@ -12,18 +12,17 @@ import { SectionHeading } from '@/components/ui/section-heading'
 import {
   type LeadApiResponse,
   type LeadFieldErrors,
+  type LeadFormState,
+  type LeadStatus,
   buildDraftWhatsAppMessage,
   createInitialLeadFormState,
   leadPrimaryNeedOptions,
-  type LeadStatus,
   validateLeadForm,
 } from '@/lib/contact'
 import { CONTACT_FORM_SOURCE } from '@/lib/lead-model'
 import { buildWhatsAppUrl } from '@/lib/whatsapp'
 import { ArrowRight } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-
-type LeadFormState = ReturnType<typeof createInitialLeadFormState>
 
 export function ContactSection() {
   const [form, setForm] = useState<LeadFormState>(createInitialLeadFormState)

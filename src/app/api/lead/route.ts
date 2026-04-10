@@ -117,6 +117,7 @@ export async function POST(request: Request) {
     if (leadError) {
       console.error('Lead intake insert failed', {
         code: leadError.code,
+        message: leadError.message,
         source,
       })
 
@@ -141,6 +142,7 @@ export async function POST(request: Request) {
     if (consentError) {
       console.error('Marketing consent insert failed', {
         code: consentError.code,
+        message: consentError.message,
         source,
       })
 
