@@ -7,7 +7,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronDown, Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 type SiteHeaderClientProps = {
   navItems: NavItem[]
@@ -23,6 +24,7 @@ type NavLinkItemProps = {
 }
 
 const observedSectionHrefs = ['#soluciones', '#proceso', '#roi', '#fundador', '#contacto']
+
 function NavLinkItem({
   item,
   href,
@@ -105,6 +107,34 @@ export function SiteHeaderClient({ navItems, authUser }: SiteHeaderClientProps) 
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState<string | null>(null)
+  const [menuPosition, setMenuPosition] = useState<{ top: number; right: number } | null>(null)
+  const menuAnchorRef = useRef<HTMLDivElement | null>(null)
+  const portalTarget = typeof document === 'undefined' ? null : document.body
+
+  function syncMenuPosition() {
+    const anchor = menuAnchorRef.current
+
+    if (!anchor) {
+      return
+    }
+
+    const rect = anchor.getBoundingClientRect()
+    setMenuPosition({
+      top: rect.bottom + 28,
+      right: Math.max(window.innerWidth - rect.right, 16),
+    })
+  }
+
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [open])
 
   useEffect(() => {
     const onScroll = () => {
@@ -137,6 +167,26 @@ export function SiteHeaderClient({ navItems, authUser }: SiteHeaderClientProps) 
       window.removeEventListener('keydown', handleEscape)
     }
   }, [])
+
+  useEffect(() => {
+    if (!menuOpen) {
+      return
+    }
+
+    syncMenuPosition()
+
+    function handleViewportChange() {
+      syncMenuPosition()
+    }
+
+    window.addEventListener('resize', handleViewportChange)
+    window.addEventListener('scroll', handleViewportChange, true)
+
+    return () => {
+      window.removeEventListener('resize', handleViewportChange)
+      window.removeEventListener('scroll', handleViewportChange, true)
+    }
+  }, [menuOpen])
 
   useEffect(() => {
     if (pathname !== '/') {
@@ -219,143 +269,184 @@ export function SiteHeaderClient({ navItems, authUser }: SiteHeaderClientProps) 
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6 lg:px-8">
-      <div
-        className={[
-          'relative mx-auto flex max-w-7xl items-center justify-between overflow-hidden rounded-full border px-5 py-3.5 transition-all duration-500',
-          scrolled
-            ? 'border-white/10 bg-[rgba(7,12,20,0.8)] shadow-[0_18px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl'
-            : 'border-white/8 bg-[rgba(7,12,20,0.42)] shadow-[0_10px_40px_rgba(0,0,0,0.12)] backdrop-blur-lg',
-        ].join(' ')}
-      >
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),transparent_35%)]"
-        />
-        <span
-          aria-hidden="true"
+      <div className="relative mx-auto max-w-7xl">
+        <div
           className={[
-            'pointer-events-none absolute inset-x-[16%] top-0 h-16 rounded-full blur-3xl transition-opacity duration-500',
-            scrolled
-              ? 'bg-[radial-gradient(circle,rgba(61,221,196,0.12),transparent_70%)] opacity-100'
-              : 'bg-[radial-gradient(circle,rgba(61,221,196,0.08),transparent_70%)] opacity-70',
+            'relative isolate flex items-center justify-between overflow-hidden rounded-full border px-5 py-3.5 transition-all duration-500',
+            menuOpen
+              ? 'border-white/10 bg-[#09111b] shadow-[0_10px_28px_rgba(0,0,0,0.18)]'
+              : scrolled
+                ? 'border-white/10 bg-[rgba(7,12,20,0.8)] shadow-[0_18px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl'
+                : 'border-white/8 bg-[rgba(7,12,20,0.42)] shadow-[0_10px_40px_rgba(0,0,0,0.12)] backdrop-blur-lg',
           ].join(' ')}
-        />
+        >
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 rounded-full bg-[linear-gradient(180deg,rgba(255,255,255,0.05),transparent_35%)]"
+          />
+          <span
+            aria-hidden="true"
+            className={[
+              'pointer-events-none absolute inset-x-[16%] top-0 h-16 rounded-full blur-3xl transition-opacity duration-500',
+              scrolled
+                ? 'bg-[radial-gradient(circle,rgba(61,221,196,0.12),transparent_70%)] opacity-100'
+                : 'bg-[radial-gradient(circle,rgba(61,221,196,0.08),transparent_70%)] opacity-70',
+            ].join(' ')}
+          />
 
-        <Link href="/#top" prefetch={false} className="relative z-10 flex items-center gap-3">
-          <span className="inline-flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-sm font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-            GD
-          </span>
-          <span className="text-sm font-semibold tracking-[0.18em] text-white/84">
-            GALFREDEV
-          </span>
-        </Link>
+          <Link href="/#top" prefetch={false} className="relative z-10 flex items-center gap-3">
+            <span className="inline-flex size-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-sm font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+              GD
+            </span>
+            <span className="text-sm font-semibold tracking-[0.18em] text-white/84">
+              GALFREDEV
+            </span>
+          </Link>
 
-        <nav className="relative z-10 hidden items-center gap-5 lg:flex" aria-label="Navegación principal">
-          {desktopItems.map((item) => (
-            <NavLinkItem
-              key={item.href}
-              item={item}
-              href={resolveHref(item.href)}
-              active={isItemActive(item)}
-            />
-          ))}
-        </nav>
-
-        <div className="relative z-10 hidden items-center gap-3 lg:flex">
-          <a
-            href={buildWhatsAppUrl(
-              'Hola, quiero pedir un diagnóstico para automatizar procesos con GalfreDev.',
-            )}
-            target="_blank"
-            rel="noreferrer"
-            className="group relative overflow-hidden rounded-full border border-[rgba(61,221,196,0.2)] bg-[linear-gradient(180deg,rgba(50,148,134,0.98),rgba(31,127,115,0.92))] px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_10px_30px_rgba(31,127,115,0.16)] transition duration-300 hover:shadow-[0_14px_38px_rgba(31,127,115,0.22)] active:scale-[0.986]"
+          <nav
+            className="relative z-10 hidden items-center gap-5 lg:flex"
+            aria-label="Navegación principal"
           >
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[linear-gradient(120deg,transparent,rgba(255,255,255,0.18),transparent)] opacity-0 transition duration-500 group-hover:translate-x-3 group-hover:opacity-100"
-            />
-            <span className="relative z-10">Pedir diagnóstico</span>
-          </a>
+            {desktopItems.map((item) => (
+              <NavLinkItem
+                key={item.href}
+                item={item}
+                href={resolveHref(item.href)}
+                active={isItemActive(item)}
+              />
+            ))}
+          </nav>
 
-          {authUser ? (
-            <div className="relative" onClick={(event) => event.stopPropagation()}>
-              <button
-                type="button"
-                onClick={() => setMenuOpen((value) => !value)}
-                className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.045] px-2 py-1.5 text-left transition duration-300 hover:border-white/18 hover:bg-white/[0.07]"
-                aria-label="Abrir menú de usuario"
-                aria-expanded={menuOpen}
-                aria-controls="user-menu"
-              >
-                <UserAvatar user={authUser} />
-                <span className="max-w-[10rem] truncate text-sm text-white/82">
-                  {authUser.displayName}
-                </span>
-                <ChevronDown size={16} className="text-white/42" />
-              </button>
-
-              <AnimatePresence>
-                {menuOpen ? (
-                  <motion.div
-                    id="user-menu"
-                    initial={{ opacity: 0, y: -10, scale: 0.985 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -10, scale: 0.985 }}
-                    transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                    className="surface-panel page-panel absolute right-0 top-[calc(100%+12px)] w-[20rem] rounded-[1.75rem] p-4"
-                  >
-                    <div className="relative flex items-center gap-3 rounded-[1.35rem] border border-white/8 bg-white/[0.03] p-3">
-                      <UserAvatar user={authUser} />
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-medium text-white">{authUser.displayName}</p>
-                        <p className="truncate text-xs text-white/46">{authUser.email}</p>
-                      </div>
-                    </div>
-
-                    <div className="mt-4 grid gap-2">
-                      <a
-                        href="/perfil"
-                        className="rounded-[1.2rem] border border-white/8 bg-white/[0.03] px-4 py-3 text-sm text-white/82 transition duration-300 hover:border-white/14 hover:bg-white/[0.06]"
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        {profileLabel}
-                      </a>
-                      <a
-                        href="/auth/signout"
-                        className="rounded-[1.2rem] border border-white/8 bg-white/[0.02] px-4 py-3 text-sm text-white/58 transition duration-300 hover:border-white/14 hover:bg-white/[0.06] hover:text-white"
-                        onClick={() => setMenuOpen(false)}
-                      >
-                        Cerrar sesión
-                      </a>
-                    </div>
-                  </motion.div>
-                ) : null}
-              </AnimatePresence>
-            </div>
-          ) : (
-            <Link
-              href="/login"
-              prefetch={false}
-              className="rounded-full border border-white/12 bg-white/[0.035] px-4 py-2.5 text-sm text-white/76 transition duration-300 hover:border-white/18 hover:bg-white/[0.06] hover:text-white"
+          <div className="relative z-10 hidden items-center gap-3 lg:flex">
+            <a
+              href={buildWhatsAppUrl(
+                'Hola, quiero pedir un diagnóstico para automatizar procesos con GalfreDev.',
+              )}
+              target="_blank"
+              rel="noreferrer"
+              className="group relative overflow-hidden rounded-full border border-[rgba(61,221,196,0.2)] bg-[linear-gradient(180deg,rgba(50,148,134,0.98),rgba(31,127,115,0.92))] px-5 py-2.5 text-sm font-semibold text-slate-950 shadow-[0_10px_30px_rgba(31,127,115,0.16)] transition duration-300 hover:shadow-[0_14px_38px_rgba(31,127,115,0.22)] active:scale-[0.986]"
             >
-              Acceso
-            </Link>
-          )}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[linear-gradient(120deg,transparent,rgba(255,255,255,0.18),transparent)] opacity-0 transition duration-500 group-hover:translate-x-3 group-hover:opacity-100"
+              />
+              <span className="relative z-10">Pedir diagnóstico</span>
+            </a>
+
+            {authUser ? (
+              <div
+                ref={menuAnchorRef}
+                className="relative"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!menuOpen) {
+                      syncMenuPosition()
+                    }
+
+                    setMenuOpen((value) => !value)
+                  }}
+                  className={[
+                    'inline-flex items-center gap-3 rounded-full border px-2 py-1.5 text-left transition duration-300',
+                    menuOpen
+                      ? 'border-[rgba(61,221,196,0.16)] bg-white/[0.06]'
+                      : 'border-white/10 bg-white/[0.045] hover:border-white/18 hover:bg-white/[0.07]',
+                  ].join(' ')}
+                  aria-label="Abrir menú de usuario"
+                  aria-expanded={menuOpen}
+                  aria-controls="user-menu"
+                >
+                  <UserAvatar user={authUser} />
+                  <span className="max-w-[10rem] truncate text-sm text-white/82">
+                    {authUser.displayName}
+                  </span>
+                  <ChevronDown
+                    size={16}
+                    className={[
+                      'text-white/42 transition-transform duration-300',
+                      menuOpen ? 'rotate-180' : 'rotate-0',
+                    ].join(' ')}
+                  />
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                prefetch={false}
+                className="rounded-full border border-white/12 bg-white/[0.035] px-4 py-2.5 text-sm text-white/76 transition duration-300 hover:border-white/18 hover:bg-white/[0.06] hover:text-white"
+              >
+                Acceso
+              </Link>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setOpen((value) => !value)}
+            className="relative z-10 inline-flex size-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-white transition duration-300 hover:border-white/18 hover:bg-white/[0.08] active:scale-[0.96] lg:hidden"
+            aria-label={open ? 'Cerrar navegación' : 'Abrir navegación'}
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
+          >
+            <span className="inline-flex transition-transform duration-200">
+              {open ? <X size={18} /> : <Menu size={18} />}
+            </span>
+          </button>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setOpen((value) => !value)}
-          className="relative z-10 inline-flex size-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-white transition duration-300 hover:border-white/18 hover:bg-white/[0.08] active:scale-[0.96] lg:hidden"
-          aria-label={open ? 'Cerrar navegación' : 'Abrir navegación'}
-          aria-expanded={open}
-          aria-controls="mobile-navigation"
-        >
-          <span className="inline-flex transition-transform duration-200">
-            {open ? <X size={18} /> : <Menu size={18} />}
-          </span>
-        </button>
       </div>
+
+      {portalTarget && authUser && menuOpen
+        ? createPortal(
+            <AnimatePresence>
+              <motion.div
+                id="user-menu"
+                initial={{ opacity: 0, y: -8, scale: 0.975 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -6, scale: 0.985 }}
+                transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                className="fixed isolate z-[70] w-[min(18.75rem,calc(100vw-2rem))] origin-top-right overflow-hidden rounded-[1.15rem] border border-white/12 bg-[#0a1019] p-4 shadow-[0_24px_48px_rgba(0,0,0,0.28)]"
+                style={
+                  menuPosition
+                    ? {
+                        top: `${menuPosition.top}px`,
+                        right: `${menuPosition.right}px`,
+                      }
+                    : undefined
+                }
+                onClick={(event) => event.stopPropagation()}
+              >
+                <div className="relative flex items-center gap-3 rounded-[1.35rem] border border-white/8 bg-white/[0.03] p-3">
+                  <UserAvatar user={authUser} />
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium text-white">{authUser.displayName}</p>
+                    <p className="truncate text-xs text-white/46">{authUser.email}</p>
+                  </div>
+                </div>
+
+                <div className="mt-4 grid gap-2">
+                  <a
+                    href="/perfil"
+                    className="rounded-[1.2rem] border border-white/8 bg-white/[0.03] px-4 py-3 text-sm text-white/82 transition duration-300 hover:border-white/14 hover:bg-white/[0.06]"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {profileLabel}
+                  </a>
+                  <a
+                    href="/auth/signout"
+                    className="rounded-[1.2rem] border border-white/8 bg-white/[0.02] px-4 py-3 text-sm text-white/58 transition duration-300 hover:border-white/14 hover:bg-white/[0.06] hover:text-white"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Cerrar sesión
+                  </a>
+                </div>
+              </motion.div>
+            </AnimatePresence>,
+            portalTarget,
+          )
+        : null}
 
       <AnimatePresence>
         {open ? (

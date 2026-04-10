@@ -94,7 +94,7 @@ function ScenarioBody({
               key={card.label}
               className="rounded-[20px] border border-white/8 bg-white/[0.03] px-4 py-3"
             >
-              <p className="text-[11px] uppercase tracking-[0.22em] text-white/34">{card.label}</p>
+              <p className="text-[11px] uppercase tracking-[0.22em] text-white/60">{card.label}</p>
               <p className="mt-2 text-sm font-medium text-white">{card.value}</p>
             </div>
           ))}
@@ -207,10 +207,10 @@ export function DeviceShowcase({ scenario }: DeviceShowcaseProps) {
 
       <motion.div
         style={enableInteraction ? { rotateX, rotateY } : undefined}
-        className="relative mx-auto w-full max-w-[460px] rounded-[40px] border border-white/10 bg-[rgba(8,12,20,0.72)] p-3 shadow-[0_40px_120px_rgba(0,0,0,0.45)] backdrop-blur-xl"
+        className="relative mx-auto w-full max-w-[460px] rounded-[40px] border border-white/10 bg-[rgba(8,12,20,0.72)] p-2 shadow-[0_40px_120px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:p-3"
       >
-        <div className="rounded-[34px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] p-3">
-          <div className="rounded-[28px] border border-white/8 bg-[rgba(7,12,18,0.96)] p-4 sm:p-5">
+        <div className="rounded-[34px] border border-transparent bg-transparent p-0 sm:border-white/8 sm:bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02))] sm:p-3">
+          <div className="rounded-[28px] border border-white/8 bg-[rgba(7,12,18,0.96)] p-3 sm:p-5">
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="flex size-10 items-center justify-center rounded-2xl border border-[var(--color-accent)]/16 bg-[var(--color-accent)]/10 text-[var(--color-accent)]">

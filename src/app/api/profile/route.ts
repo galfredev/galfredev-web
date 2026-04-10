@@ -116,7 +116,7 @@ export async function POST(request: Request) {
     )
 
     if (profileError) {
-      console.error('Profile upsert failed', { code: profileError.code })
+      console.error('Profile upsert failed', { code: profileError.code, message: profileError.message })
 
       return NextResponse.json(
         { ok: false, message: 'No se pudo guardar la información básica del perfil.' },
@@ -146,7 +146,7 @@ export async function POST(request: Request) {
       )
 
     if (preferencesError) {
-      console.error('User preferences upsert failed', { code: preferencesError.code })
+      console.error('User preferences upsert failed', { code: preferencesError.code, message: preferencesError.message })
 
       return NextResponse.json(
         { ok: false, message: 'No se pudieron guardar tus preferencias.' },
@@ -169,7 +169,7 @@ export async function POST(request: Request) {
     )
 
     if (consentError) {
-      console.error('Marketing consent upsert failed', { code: consentError.code })
+      console.error('Marketing consent upsert failed', { code: consentError.code, message: consentError.message })
 
       return NextResponse.json(
         { ok: false, message: 'No se pudieron guardar tus consentimientos.' },

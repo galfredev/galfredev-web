@@ -24,7 +24,7 @@ function CertificationShowcase() {
 
   return (
     <div className="grid gap-5 lg:grid-cols-[0.82fr_1.18fr]">
-      <div className="space-y-3">
+      <div className="space-y-3 lg:col-span-1">
         {certifications.map((certification) => (
           <motion.button
             key={certification.id}
@@ -52,7 +52,7 @@ function CertificationShowcase() {
       </div>
 
       {activeCertification ? (
-        <InteractivePanel className="p-4">
+        <InteractivePanel className="hidden p-4 lg:block">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
               <p className="text-sm font-medium text-white">{activeCertification.title}</p>
@@ -131,7 +131,7 @@ export function FounderSection() {
           <SectionHeading
             eyebrow="Valentino Galfre"
             title="Ingeniería, automatización e implementación real para negocios que necesitan avanzar en serio."
-            description="Quise que esta sección tuviera más presencia visual, sin perder claridad. La idea es que se sienta humana, técnica y sólida al mismo tiempo."
+            description="Detrás de cada solución de GalfreDev hay ingeniería real, criterio técnico y foco en resultados concretos."
           />
         </Reveal>
 
@@ -139,7 +139,7 @@ export function FounderSection() {
           <Reveal className="space-y-6" variant="surface">
             <BorderGlowCard className="p-4">
               <div className="absolute inset-x-8 top-0 h-32 rounded-full bg-[radial-gradient(circle,rgba(61,221,196,0.22),transparent_62%)] blur-3xl" />
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[1.7rem] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))]">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[1.7rem] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02))] sm:aspect-[4/5]">
                 <Image
                   src={siteCopy.founderImage}
                   alt="Valentino Galfre"
@@ -160,13 +160,24 @@ export function FounderSection() {
                       repeat: Number.POSITIVE_INFINITY,
                       ease: 'easeInOut',
                     }}
-                    className={`absolute ${badge.className} rounded-full border border-white/12 bg-[rgba(8,12,20,0.72)] px-3 py-2 text-xs uppercase tracking-[0.18em] text-white/78 backdrop-blur-xl`}
+                    className={`absolute hidden lg:block ${badge.className} rounded-full border border-white/12 bg-[rgba(8,12,20,0.72)] px-3 py-2 text-xs uppercase tracking-[0.18em] text-white/78 backdrop-blur-xl`}
                   >
                     {badge.text}
                   </motion.div>
                 ))}
               </div>
             </BorderGlowCard>
+
+            <div className="flex flex-wrap gap-2 lg:hidden">
+              {['Next.js + TS', 'Supabase', 'Automatización'].map((badge) => (
+                <span
+                  key={badge}
+                  className="rounded-full border border-white/12 bg-white/[0.04] px-3 py-2 text-xs uppercase tracking-[0.18em] text-white/72"
+                >
+                  {badge}
+                </span>
+              ))}
+            </div>
 
             <div className="grid gap-4 sm:grid-cols-3">
               {['UTN FRC', 'Backend', 'IA aplicada'].map((item, index) => {
@@ -237,7 +248,7 @@ export function FounderSection() {
                 <div className="mb-6">
                   <p className="section-kicker">Certificaciones</p>
                   <p className="mt-3 max-w-2xl text-sm leading-7 text-white/58">
-                    Se mantienen visibles e interactivas para reforzar confianza sin llenar la sección de texto.
+                    Formación verificable respaldada por instituciones reconocidas en la industria.
                   </p>
                 </div>
                 <CertificationShowcase />

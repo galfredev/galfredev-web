@@ -42,13 +42,13 @@ export function Reveal({
         hydrated
           ? reduceMotion
             ? { opacity: 0 }
-            : { opacity: 0, y: config.y, scale: config.scale, filter: 'blur(10px)' }
+            : { opacity: 0, y: config.y, scale: config.scale }
           : false
       }
       whileInView={
         reduceMotion
           ? { opacity: 1 }
-          : { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }
+          : { opacity: 1, y: 0, scale: 1 }
       }
       viewport={{ once: true, amount: config.amount }}
       transition={{ duration: reduceMotion ? 0.38 : config.duration, ease: [0.22, 1, 0.36, 1], delay }}
