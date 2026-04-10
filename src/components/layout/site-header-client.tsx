@@ -126,6 +126,17 @@ export function SiteHeaderClient({ navItems, authUser }: SiteHeaderClientProps) 
   }
 
   useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [open])
+
+  useEffect(() => {
     const onScroll = () => {
       const nextScrolled = window.scrollY > 14
       setScrolled((current) => (current === nextScrolled ? current : nextScrolled))

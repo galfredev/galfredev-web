@@ -37,7 +37,7 @@ export function ProcessSection() {
             </div>
           </Reveal>
 
-          <Reveal delay={0.06} variant="surface">
+          <Reveal delay={0.06} variant="surface" className="hidden lg:block">
             <div className="rounded-[2.1rem] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))] p-6 backdrop-blur-sm sm:p-7">
               <div className="rounded-[1.8rem] border border-white/8 bg-black/18 px-5 py-5 sm:px-6">
                 <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_2.8rem_minmax(0,1fr)_2.8rem_minmax(0,1fr)] md:items-center md:gap-0">
@@ -48,7 +48,7 @@ export function ProcessSection() {
                           <div className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-[1rem] border border-[var(--color-accent)]/18 bg-[var(--color-accent)]/10 px-3 text-sm font-semibold text-[var(--color-accent)]">
                             {step.step}
                           </div>
-                          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/32">
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/60">
                             Paso
                           </p>
                         </div>
@@ -97,7 +97,7 @@ export function ProcessSection() {
                     <div className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-[1.15rem] border border-[var(--color-accent)]/18 bg-[var(--color-accent)]/10 px-3 text-sm font-semibold text-[var(--color-accent)] shadow-[0_0_24px_rgba(31,127,115,0.08)]">
                       {step.step}
                     </div>
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/30">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/60">
                       Paso
                     </span>
                   </div>

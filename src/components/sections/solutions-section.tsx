@@ -20,7 +20,7 @@ export function SolutionsSection() {
         <div className="mt-12 grid gap-5 lg:grid-cols-2">
           {solutions.map((solution, index) => (
             <Reveal key={solution.title} delay={index * 0.05} variant="surface">
-              <InteractivePanel className="h-full p-6 sm:p-7">
+              <InteractivePanel className="h-full p-4 sm:p-6">
                 <div className="flex flex-wrap items-center gap-3">
                   {solution.label ? (
                     <span className="rounded-full border border-[var(--color-accent)]/18 bg-[var(--color-accent)]/8 px-3 py-1 text-[11px] uppercase tracking-[0.22em] text-[var(--color-accent)]">
@@ -32,7 +32,7 @@ export function SolutionsSection() {
                   </span>
                 </div>
 
-                <h3 className="mt-6 max-w-[16ch] text-[1.9rem] font-medium leading-[1.02] tracking-[-0.05em] text-white">
+                <h3 className="mt-5 max-w-[16ch] text-[1.5rem] font-medium leading-[1.02] tracking-[-0.05em] text-white sm:mt-6 sm:text-[1.9rem]">
                   {solution.title}
                 </h3>
 
