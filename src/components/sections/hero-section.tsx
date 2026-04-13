@@ -6,7 +6,7 @@ import { DeviceShowcase } from '@/components/motion/device-showcase'
 import { RotatingText } from '@/components/motion/rotating-text'
 import { heroMetrics, heroScenarios } from '@/content/site-content'
 import { buildWhatsAppUrl } from '@/lib/whatsapp'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { ArrowDownRight } from 'lucide-react'
 import Link from 'next/link'
 import { startTransition, useEffect, useState } from 'react'
@@ -16,6 +16,10 @@ const HERO_ROTATION_MS = 5800
 export function HeroSection() {
   const [activeScenarioIndex, setActiveScenarioIndex] = useState(0)
   const activeScenario = heroScenarios[activeScenarioIndex] ?? heroScenarios[0]
+
+  const { scrollY } = useScroll()
+  const bgY = useTransform(scrollY, [0, 600], [0, -80])
+  const bgOpacity = useTransform(scrollY, [0, 500], [1, 0.4])
 
   useEffect(() => {
     if (heroScenarios.length <= 1) {
@@ -33,7 +37,10 @@ export function HeroSection() {
 
   return (
     <section className="relative overflow-hidden px-4 pt-28 sm:px-6 sm:pt-32 lg:px-8">
-      <div className="absolute inset-x-0 top-0 h-[780px] bg-[radial-gradient(circle_at_top,rgba(31,127,115,0.2),transparent_44%),radial-gradient(circle_at_76%_16%,rgba(255,165,75,0.12),transparent_26%),radial-gradient(circle_at_20%_8%,rgba(77,122,255,0.08),transparent_24%)]" />
+      <motion.div
+        style={{ y: bgY, opacity: bgOpacity }}
+        className="absolute inset-x-0 top-0 h-[780px] bg-[radial-gradient(circle_at_top,rgba(31,127,115,0.2),transparent_44%),radial-gradient(circle_at_76%_16%,rgba(255,165,75,0.12),transparent_26%),radial-gradient(circle_at_20%_8%,rgba(77,122,255,0.08),transparent_24%)]"
+      />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,8,16,0.08),rgba(5,8,16,0.84))]" />
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-14 pb-16 sm:min-h-[92svh] sm:pb-18 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:gap-10 lg:pb-24">

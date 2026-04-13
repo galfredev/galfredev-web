@@ -9,6 +9,7 @@ type RevealProps = {
   className?: string
   delay?: number
   y?: number
+  x?: number
   id?: string
   variant?: 'hero' | 'section' | 'surface'
 }
@@ -18,6 +19,7 @@ export function Reveal({
   className,
   delay = 0,
   y = 20,
+  x = 0,
   variant = 'section',
   ...props
 }: RevealProps) {
@@ -42,13 +44,13 @@ export function Reveal({
         hydrated
           ? reduceMotion
             ? { opacity: 0 }
-            : { opacity: 0, y: config.y, scale: config.scale }
+            : { opacity: 0, y: config.y, x, scale: config.scale }
           : false
       }
       whileInView={
         reduceMotion
           ? { opacity: 1 }
-          : { opacity: 1, y: 0, scale: 1 }
+          : { opacity: 1, y: 0, x: 0, scale: 1 }
       }
       viewport={{ once: true, amount: config.amount }}
       transition={{ duration: reduceMotion ? 0.38 : config.duration, ease: [0.22, 1, 0.36, 1], delay }}
