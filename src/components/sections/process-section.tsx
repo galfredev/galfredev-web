@@ -103,7 +103,7 @@ export function ProcessSection() {
 
         <StaggerReveal className="grid gap-4 lg:grid-cols-3" delay={0.1} stagger={0.1}>
           {processSteps.map((step, index) => (
-            <StaggerItem key={step.step}>
+            <StaggerItem key={step.step} className="h-full">
               <BorderGlowCard className="relative h-full p-5 sm:p-6">
                 {index < processSteps.length - 1 ? (
                   <div className="pointer-events-none absolute right-[-0.55rem] top-[3.1rem] hidden h-px w-6 bg-gradient-to-r from-[var(--color-accent)]/45 to-transparent lg:block" />
