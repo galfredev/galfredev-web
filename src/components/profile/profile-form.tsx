@@ -247,10 +247,10 @@ export function ProfileForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-[34px] border border-white/8 bg-[rgba(8,12,20,0.84)] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.28)] backdrop-blur-xl sm:p-8"
+      className="rounded-[24px] border border-white/8 bg-[rgba(8,12,20,0.84)] p-4 shadow-[0_24px_90px_rgba(0,0,0,0.28)] backdrop-blur-xl sm:rounded-[34px] sm:p-6 lg:p-8"
     >
       <div className="grid gap-8 xl:grid-cols-[0.82fr_1.18fr]">
-        <aside className="space-y-5">
+        <aside className="order-2 space-y-5 xl:order-1">
           <div className="rounded-[30px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.02))] p-6">
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--color-accent)]">
               {isOnboarding ? 'Onboarding de perfil' : 'Perfil editable'}
@@ -337,7 +337,7 @@ export function ProfileForm({
           </div>
         </aside>
 
-        <div className="space-y-5">
+        <div className="order-1 space-y-5 xl:order-2">
           {topMessage ? (
             <div
               className={[
