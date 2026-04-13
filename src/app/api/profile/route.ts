@@ -182,7 +182,7 @@ export async function POST(request: Request) {
       message: wasComplete
         ? 'Perfil actualizado correctamente.'
         : 'Perfil completado correctamente.',
-      redirectTo: '/?profile=updated',
+      redirectTo: '/perfil',
     })
   } catch {
     return NextResponse.json(
