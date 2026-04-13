@@ -160,7 +160,7 @@ export function FounderSection() {
                       repeat: Number.POSITIVE_INFINITY,
                       ease: 'easeInOut',
                     }}
-                    className={`absolute hidden lg:block ${badge.className} rounded-full border border-white/12 bg-[rgba(8,12,20,0.72)] px-3 py-2 text-xs uppercase tracking-[0.18em] text-white/78 backdrop-blur-xl`}
+                    className={`absolute ${badge.className} rounded-full border border-white/12 bg-[rgba(8,12,20,0.72)] px-3 py-2 text-xs uppercase tracking-[0.18em] text-white/78 backdrop-blur-xl`}
                   >
                     {badge.text}
                   </motion.div>
@@ -168,16 +168,7 @@ export function FounderSection() {
               </div>
             </BorderGlowCard>
 
-            <div className="flex flex-wrap gap-2 lg:hidden">
-              {['Next.js + TS', 'Supabase', 'Automatización'].map((badge) => (
-                <span
-                  key={badge}
-                  className="rounded-full border border-white/12 bg-white/[0.04] px-3 py-2 text-xs uppercase tracking-[0.18em] text-white/72"
-                >
-                  {badge}
-                </span>
-              ))}
-            </div>
+            {/* mobile badges hidden since they appear overlaid on image now */}
 
             <div className="grid gap-4 sm:grid-cols-3">
               {['UTN FRC', 'Backend', 'IA aplicada'].map((item, index) => {

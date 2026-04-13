@@ -468,18 +468,33 @@ export function SiteHeaderClient({ navItems, authUser }: SiteHeaderClientProps) 
               </div>
             ) : null}
 
-            <div className="space-y-2">
+            <motion.div
+              className="space-y-2"
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.06, delayChildren: 0.05 } },
+              }}
+              initial="hidden"
+              animate="visible"
+            >
               {desktopItems.map((item) => (
-                <NavLinkItem
+                <motion.div
                   key={item.href}
-                  item={item}
-                  href={resolveHref(item.href)}
-                  active={isItemActive(item)}
-                  mobile
-                  onNavigate={() => setOpen(false)}
-                />
+                  variants={{
+                    hidden: { opacity: 0, x: -10 },
+                    visible: { opacity: 1, x: 0, transition: { duration: 0.32, ease: [0.22, 1, 0.36, 1] } },
+                  }}
+                >
+                  <NavLinkItem
+                    item={item}
+                    href={resolveHref(item.href)}
+                    active={isItemActive(item)}
+                    mobile
+                    onNavigate={() => setOpen(false)}
+                  />
+                </motion.div>
               ))}
-            </div>
+            </motion.div>
 
             <div className="mt-4 grid gap-3 border-t border-white/8 pt-4">
               <a
