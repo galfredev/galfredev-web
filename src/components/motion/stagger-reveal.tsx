@@ -9,7 +9,6 @@ type StaggerRevealProps = {
   className?: string
   delay?: number
   stagger?: number
-  y?: number
   id?: string
 }
 
@@ -39,7 +38,6 @@ export function StaggerReveal({
   className,
   delay = 0,
   stagger = 0.09,
-  y = 18,
   ...props
 }: StaggerRevealProps) {
   const reduceMotion = useReducedMotion()
@@ -58,13 +56,7 @@ export function StaggerReveal({
       className={cn(className)}
       {...props}
     >
-      {Array.isArray(children)
-        ? children.map((child, i) => (
-            <motion.div key={i} variants={itemVariants(y, reduceMotion ?? false)}>
-              {child}
-            </motion.div>
-          ))
-        : children}
+      {children}
     </motion.div>
   )
 }
