@@ -1,7 +1,11 @@
+'use client'
+
 import { BorderGlowCard } from '@/components/motion/border-glow-card'
 import { Reveal } from '@/components/motion/reveal'
+import { StaggerItem, StaggerReveal } from '@/components/motion/stagger-reveal'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { processSteps } from '@/content/site-content'
+import { motion } from 'framer-motion'
 
 export function ProcessSection() {
   return (
@@ -60,9 +64,22 @@ export function ProcessSection() {
 
                       {index < processSteps.length - 1 ? (
                         <div className="hidden items-center justify-center md:flex">
-                          <div className="relative flex h-5 w-full items-center justify-center">
-                            <div className="h-px w-full bg-gradient-to-r from-[var(--color-accent)]/10 via-[var(--color-accent)]/26 to-[var(--color-accent)]/10" />
-                            <div className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--color-accent)]/78 shadow-[0_0_12px_rgba(24,189,159,0.34)]" />
+                          <div className="relative flex h-5 w-full items-center justify-center overflow-hidden">
+                            <motion.div
+                              className="h-px w-full bg-gradient-to-r from-[var(--color-accent)]/10 via-[var(--color-accent)]/26 to-[var(--color-accent)]/10"
+                              initial={{ scaleX: 0 }}
+                              whileInView={{ scaleX: 1 }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 0.9, delay: 0.3 + index * 0.15, ease: [0.22, 1, 0.36, 1] }}
+                              style={{ originX: 0 }}
+                            />
+                            <motion.div
+                              className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--color-accent)]/78 shadow-[0_0_12px_rgba(24,189,159,0.34)]"
+                              initial={{ opacity: 0, scale: 0 }}
+                              whileInView={{ opacity: 1, scale: 1 }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 0.4, delay: 0.7 + index * 0.15, ease: [0.22, 1, 0.36, 1] }}
+                            />
                           </div>
                         </div>
                       ) : null}
@@ -84,9 +101,9 @@ export function ProcessSection() {
           </Reveal>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-3">
+        <StaggerReveal className="grid gap-4 lg:grid-cols-3" delay={0.1} stagger={0.1}>
           {processSteps.map((step, index) => (
-            <Reveal key={step.step} delay={index * 0.06 + 0.08} variant="surface">
+            <StaggerItem key={step.step}>
               <BorderGlowCard className="relative h-full p-5 sm:p-6">
                 {index < processSteps.length - 1 ? (
                   <div className="pointer-events-none absolute right-[-0.55rem] top-[3.1rem] hidden h-px w-6 bg-gradient-to-r from-[var(--color-accent)]/45 to-transparent lg:block" />
@@ -113,9 +130,9 @@ export function ProcessSection() {
                   </div>
                 </div>
               </BorderGlowCard>
-            </Reveal>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerReveal>
       </div>
     </section>
   )
