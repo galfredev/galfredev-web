@@ -42,59 +42,65 @@ export function ProcessSection() {
           </Reveal>
 
           <Reveal delay={0.06} variant="surface" className="hidden lg:block">
-            <div className="rounded-[2.1rem] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))] p-6 backdrop-blur-sm sm:p-7">
-              <div className="rounded-[1.8rem] border border-white/8 bg-black/18 px-5 py-5 sm:px-6">
-                <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_2.8rem_minmax(0,1fr)_2.8rem_minmax(0,1fr)] md:items-center md:gap-0">
-                  {processSteps.map((step, index) => (
-                    <div key={step.step} className="contents">
-                      <div className="min-w-0 rounded-[1.3rem] border border-white/8 bg-white/[0.02] px-4 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-[1rem] border border-[var(--color-accent)]/18 bg-[var(--color-accent)]/10 px-3 text-sm font-semibold text-[var(--color-accent)]">
-                            {step.step}
-                          </div>
-                          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/60">
-                            Paso
-                          </p>
-                        </div>
+            <div className="relative overflow-hidden rounded-[2.1rem] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.015))] p-8 backdrop-blur-sm sm:p-10">
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(31,127,115,0.18),transparent_62%)]" />
 
-                        <p className="mt-3 max-w-[12ch] text-[0.98rem] font-medium leading-[1.12] text-white">
-                          {step.title}
-                        </p>
-                      </div>
+              <div className="relative mx-auto aspect-square w-full max-w-[380px]">
+                {[
+                  { scale: 1, delay: 0 },
+                  { scale: 0.78, delay: 0.6 },
+                  { scale: 0.56, delay: 1.2 },
+                ].map((ring, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute inset-0 rounded-full border border-[var(--color-accent)]/16"
+                    initial={{ scale: ring.scale, opacity: 0.22 }}
+                    animate={{ opacity: [0.22, 0.55, 0.22] }}
+                    transition={{ duration: 3.8, delay: ring.delay, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                ))}
 
-                      {index < processSteps.length - 1 ? (
-                        <div className="hidden items-center justify-center md:flex">
-                          <div className="relative flex h-5 w-full items-center justify-center overflow-hidden">
-                            <motion.div
-                              className="h-px w-full bg-gradient-to-r from-[var(--color-accent)]/10 via-[var(--color-accent)]/26 to-[var(--color-accent)]/10"
-                              initial={{ scaleX: 0 }}
-                              whileInView={{ scaleX: 1 }}
-                              viewport={{ once: true }}
-                              transition={{ duration: 0.9, delay: 0.3 + index * 0.15, ease: [0.22, 1, 0.36, 1] }}
-                              style={{ originX: 0 }}
-                            />
-                            <motion.div
-                              className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--color-accent)]/78 shadow-[0_0_12px_rgba(24,189,159,0.34)]"
-                              initial={{ opacity: 0, scale: 0 }}
-                              whileInView={{ opacity: 1, scale: 1 }}
-                              viewport={{ once: true }}
-                              transition={{ duration: 0.4, delay: 0.7 + index * 0.15, ease: [0.22, 1, 0.36, 1] }}
-                            />
-                          </div>
-                        </div>
-                      ) : null}
-                    </div>
-                  ))}
-                </div>
+                <motion.div
+                  className="absolute inset-0"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
+                >
+                  <div className="absolute left-1/2 top-0 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--color-accent)] shadow-[0_0_18px_rgba(31,127,115,0.7)]" />
+                </motion.div>
+
+                <motion.div
+                  className="absolute inset-[11%]"
+                  animate={{ rotate: -360 }}
+                  transition={{ duration: 17, repeat: Infinity, ease: 'linear' }}
+                >
+                  <div className="absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--color-warm)]/85 shadow-[0_0_14px_rgba(255,180,106,0.55)]" />
+                </motion.div>
+
+                <motion.div
+                  className="absolute inset-[22%]"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+                >
+                  <div className="absolute left-1/2 top-0 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--color-accent-strong)] shadow-[0_0_10px_rgba(42,145,132,0.65)]" />
+                </motion.div>
+
+                <motion.div
+                  className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--color-accent)]/18 backdrop-blur-md"
+                  animate={{ scale: [1, 1.07, 1] }}
+                  transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <div className="absolute inset-2 rounded-full border border-[var(--color-accent)]/40 bg-[var(--color-accent)]/30 shadow-[0_0_42px_rgba(31,127,115,0.5)]" />
+                  <div className="absolute inset-[40%] rounded-full bg-white/85 shadow-[0_0_14px_rgba(255,255,255,0.55)]" />
+                </motion.div>
               </div>
 
-              <div className="mt-5 rounded-[1.6rem] border border-white/8 bg-black/18 px-5 py-5">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-accent)]">
-                  Método GalfreDev
+              <div className="relative mt-9 text-center">
+                <p className="text-[13px] font-semibold uppercase tracking-[0.28em] text-[var(--color-accent)]">
+                  Sistema en operación
                 </p>
-                <p className="mt-3 max-w-3xl text-sm leading-7 text-white/58">
-                  El objetivo es llegar rápido a una solución que sirva en operación real, no a
-                  un proceso largo que se vea bien en una presentación y después no se use.
+                <p className="mt-4 text-base leading-8 text-white/72 sm:text-[17px]">
+                  Cuando todo encaja, no se ve el método.{' '}
+                  <span className="text-white">Se ve el resultado.</span>
                 </p>
               </div>
             </div>
