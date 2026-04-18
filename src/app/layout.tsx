@@ -1,6 +1,7 @@
 import { socialLinks, siteCopy } from '@/content/site-content'
 import { env } from '@/lib/env'
 import { WhatsAppFab } from '@/components/layout/whatsapp-fab'
+import { CursorSpotlight } from '@/components/motion/cursor-spotlight'
 import { Analytics } from '@vercel/analytics/next'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import type { Metadata } from 'next'
@@ -80,6 +81,7 @@ export default function RootLayout({
         >
           Saltar al contenido
         </a>
+        <CursorSpotlight />
         {children}
         <WhatsAppFab />
         <Analytics />

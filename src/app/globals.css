@@ -31,7 +31,6 @@
 html {
   scroll-behavior: smooth;
 }
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -228,7 +227,7 @@ textarea {
 .roi-slider::-webkit-slider-runnable-track {
   height: 0.55rem;
   border-radius: 999px;
-  background: linear-gradient(90deg, rgba(16, 185, 129, 0.55), rgba(16, 185, 129, 0.08));
+  background: linear-gradient(90deg, rgba(31, 127, 115, 0.6), rgba(31, 127, 115, 0.08));
 }
 
 .roi-slider::-webkit-slider-thumb {
@@ -238,24 +237,24 @@ textarea {
   width: 1.25rem;
   height: 1.25rem;
   border-radius: 999px;
-  border: 2px solid rgba(16, 185, 129, 0.92);
-  background: #d1fae5;
-  box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.12);
+  border: 2px solid rgba(61, 221, 196, 0.85);
+  background: #e6fffa;
+  box-shadow: 0 0 0 6px rgba(31, 127, 115, 0.16);
 }
 
 .roi-slider::-moz-range-track {
   height: 0.55rem;
   border-radius: 999px;
-  background: linear-gradient(90deg, rgba(16, 185, 129, 0.55), rgba(16, 185, 129, 0.08));
+  background: linear-gradient(90deg, rgba(31, 127, 115, 0.6), rgba(31, 127, 115, 0.08));
 }
 
 .roi-slider::-moz-range-thumb {
   width: 1.25rem;
   height: 1.25rem;
   border-radius: 999px;
-  border: 2px solid rgba(16, 185, 129, 0.92);
-  background: #d1fae5;
-  box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.12);
+  border: 2px solid rgba(61, 221, 196, 0.85);
+  background: #e6fffa;
+  box-shadow: 0 0 0 6px rgba(31, 127, 115, 0.16);
 }
 
 @media (max-width: 767px) {

@@ -1,5 +1,7 @@
 'use client'
 
+import { BorderGlowCard } from '@/components/motion/border-glow-card'
+import { StaggerItem, StaggerReveal } from '@/components/motion/stagger-reveal'
 import { calculateRoi } from '@/lib/roi'
 import { formatCurrencyArs } from '@/lib/utils'
 import { buildWhatsAppUrl } from '@/lib/whatsapp'
@@ -109,7 +111,7 @@ function RoiProjectionChart({
   } L ${points[0]?.x ?? paddingX} ${height - paddingBottom} Z`
 
   return (
-    <div className="rounded-[1.6rem] border border-white/10 bg-white/[0.04] p-4 sm:p-5">
+    <div className="surface-panel surface-panel-soft p-4 sm:p-5">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
           <p className="text-sm font-medium text-white">Proyección de ahorro a 12 meses</p>
@@ -117,7 +119,7 @@ function RoiProjectionChart({
             Se acumula automáticamente mes a mes según el ahorro estimado actual.
           </p>
         </div>
-        <div className="hidden shrink-0 whitespace-nowrap rounded-full border border-emerald-400/16 bg-emerald-400/8 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-emerald-300 sm:inline-flex">
+        <div className="hidden shrink-0 whitespace-nowrap rounded-full border border-[var(--color-accent)]/18 bg-[var(--color-accent)]/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-[var(--color-accent)] sm:inline-flex">
           ROI visible
         </div>
       </div>
@@ -130,12 +132,12 @@ function RoiProjectionChart({
       >
         <defs>
           <linearGradient id="roi-line" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(16,185,129,0.58)" />
-            <stop offset="100%" stopColor="rgba(45,212,191,1)" />
+            <stop offset="0%" stopColor="rgba(31,127,115,0.6)" />
+            <stop offset="100%" stopColor="rgba(61,221,196,1)" />
           </linearGradient>
           <linearGradient id="roi-fill" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="rgba(16,185,129,0.28)" />
-            <stop offset="100%" stopColor="rgba(16,185,129,0)" />
+            <stop offset="0%" stopColor="rgba(31,127,115,0.28)" />
+            <stop offset="100%" stopColor="rgba(31,127,115,0)" />
           </linearGradient>
         </defs>
 
@@ -177,7 +179,7 @@ function RoiProjectionChart({
               cy={point.y}
               r="5"
               fill="#0a0a0f"
-              stroke="rgba(45,212,191,0.9)"
+              stroke="rgba(61,221,196,0.9)"
               strokeWidth="3"
             />
           </g>
@@ -203,31 +205,26 @@ type ResultCardProps = {
   label: string
   value: number
   formatter: (value: number) => string
-  delay: number
   icon: ComponentType<{ size?: number; className?: string }>
 }
 
-function ResultCard({ label, value, formatter, delay, icon: Icon }: ResultCardProps) {
+function ResultCard({ label, value, formatter, icon: Icon }: ResultCardProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.56, delay, ease: [0.22, 1, 0.36, 1] }}
-      className="flex min-h-[12.5rem] h-full flex-col rounded-2xl border border-white/10 bg-white/[0.05] p-5 backdrop-blur-sm transition duration-300 hover:border-emerald-400/18 hover:bg-white/[0.06]"
-    >
-      <div className="flex min-h-[4.25rem] items-start justify-between gap-3">
-        <p className="max-w-[8ch] text-sm uppercase leading-[1.35] tracking-[0.22em] text-emerald-400">
-          {label}
-        </p>
-        <div className="rounded-xl border border-white/10 bg-black/18 p-2 text-emerald-300">
-          <Icon size={16} />
+    <BorderGlowCard className="relative h-full min-h-[10.5rem] p-5">
+      <div className="flex h-full flex-col">
+        <div className="flex min-h-[2.75rem] items-start justify-between gap-3">
+          <p className="max-w-[9ch] text-[10px] font-semibold uppercase leading-[1.35] tracking-[0.26em] text-white/60">
+            {label}
+          </p>
+          <div className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-[1rem] border border-[var(--color-accent)]/18 bg-[var(--color-accent)]/10 text-[var(--color-accent)] shadow-[0_0_24px_rgba(31,127,115,0.08)]">
+            <Icon size={16} />
+          </div>
         </div>
+        <p className="mt-auto overflow-hidden break-words pt-5 text-[clamp(1.4rem,1.7vw,2.2rem)] font-medium leading-[1] tracking-[-0.05em] text-white">
+          <AnimatedMetric value={value} formatter={formatter} />
+        </p>
       </div>
-      <p className="mt-auto overflow-hidden break-words pt-5 text-[clamp(1.85rem,2.3vw,3.05rem)] font-bold leading-[0.92] tracking-[-0.07em] text-white">
-        <AnimatedMetric value={value} formatter={formatter} />
-      </p>
-    </motion.div>
+    </BorderGlowCard>
   )
 }
 
@@ -255,23 +252,23 @@ export function ROICalculator() {
   )
 
   return (
-    <div className="mt-12 rounded-[2rem] border border-white/10 bg-white/[0.04] p-5 backdrop-blur-sm sm:p-7 lg:p-8">
+    <div className="surface-panel mt-12 p-5 sm:p-7 lg:p-8">
       <div className="grid gap-6 xl:grid-cols-[0.92fr_1.08fr]">
         <div className="space-y-5">
-          <div className="rounded-[1.7rem] border border-white/10 bg-black/16 p-5 sm:p-6">
+          <div className="surface-panel surface-panel-soft p-5 sm:p-6">
             <div className="space-y-5">
               <div>
                 <label
                   htmlFor={salaryInputId}
                   className="flex items-center gap-2 text-sm font-medium text-white"
                 >
-                  <Wallet size={16} className="text-emerald-400" />
+                  <Wallet size={16} className="text-[var(--color-accent)]" />
                   Sueldo mensual del recurso
                 </label>
                 <p className="mt-2 text-sm leading-6 text-white/55">
                   Ingresá el costo mensual del empleado o recurso que hoy hace esas tareas.
                 </p>
-                <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3">
+                <div className="mt-4 rounded-[1.3rem] border border-white/8 bg-white/[0.02] px-4 py-3">
                   <input
                     id={salaryInputId}
                     type="text"
@@ -281,7 +278,7 @@ export function ROICalculator() {
                     onChange={(event) => {
                       setMonthlySalaryArs(parseCurrencyInput(event.target.value))
                     }}
-                    className="w-full bg-transparent text-2xl font-semibold tracking-[-0.04em] text-white outline-none placeholder:text-white/24"
+                    className="w-full bg-transparent text-2xl font-medium tracking-[-0.04em] text-white outline-none placeholder:text-white/24"
                     aria-describedby={`${salaryInputId}-help`}
                   />
                 </div>
@@ -293,10 +290,10 @@ export function ROICalculator() {
                     htmlFor={hoursInputId}
                     className="flex items-center gap-2 text-sm font-medium text-white"
                   >
-                    <Coins size={16} className="text-emerald-400" />
+                    <Coins size={16} className="text-[var(--color-accent)]" />
                     Horas semanales en tareas repetitivas
                   </label>
-                  <span className="rounded-full border border-emerald-400/16 bg-emerald-400/8 px-3 py-1 text-sm font-medium text-emerald-300">
+                  <span className="rounded-full border border-[var(--color-accent)]/18 bg-[var(--color-accent)]/10 px-3 py-1 text-sm font-medium text-[var(--color-accent)]">
                     {formatHours(repetitiveHoursPerWeek)} hs
                   </span>
                 </div>
@@ -326,7 +323,9 @@ export function ROICalculator() {
             </div>
           </div>
 
-          <div className="rounded-[1.4rem] border border-emerald-400/16 bg-emerald-400/8 px-4 py-4 text-sm text-white/74">
+          <div className="ambient-divider" />
+
+          <div className="rounded-[1.6rem] border border-[var(--color-accent)]/18 bg-[var(--color-accent)]/10 px-4 py-4 text-sm text-white/74">
             Hoy esas horas repetitivas te están costando aproximadamente{' '}
             <span className="font-semibold text-white">
               <AnimatedMetric
@@ -349,12 +348,15 @@ export function ROICalculator() {
             href={whatsappHref}
             target="_blank"
             rel="noreferrer"
-            className="group block rounded-[1.6rem] border border-emerald-400/18 bg-[linear-gradient(180deg,rgba(16,185,129,0.12),rgba(16,185,129,0.06))] p-5 text-white transition duration-300 hover:border-emerald-400/28 hover:bg-[linear-gradient(180deg,rgba(16,185,129,0.16),rgba(16,185,129,0.08))]"
+            className="surface-panel-interactive group relative block overflow-hidden rounded-[1.6rem] border border-[var(--color-accent)]/20 bg-[linear-gradient(180deg,rgba(31,127,115,0.13),rgba(31,127,115,0.05))] p-5 text-white backdrop-blur-sm hover:border-[var(--color-accent)]/32 hover:shadow-[0_0_48px_rgba(31,127,115,0.12)]"
           >
-            <p className="text-sm uppercase tracking-[0.22em] text-emerald-300">Siguiente paso</p>
-            <p className="mt-3 text-xl font-semibold leading-tight tracking-[-0.04em]">
+            <div className="pointer-events-none absolute inset-[1px] rounded-[calc(1.6rem-1px)] border border-[var(--color-accent)]/8" />
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[var(--color-accent)]">
+              Siguiente paso
+            </p>
+            <p className="mt-3 text-xl font-medium leading-tight tracking-[-0.04em]">
               Si automatizás estas tareas, podés recuperar{' '}
-              <span className="text-emerald-300">
+              <span className="text-[var(--color-accent)]">
                 <AnimatedMetric
                   value={results.annualSavingsArs}
                   formatter={formatCurrencyArs}
@@ -366,36 +368,39 @@ export function ROICalculator() {
               Quiero automatizar
               <ArrowRight
                 size={16}
-                className="transition duration-300 group-hover:translate-x-0.5"
+                className="transition-transform duration-300 group-hover:translate-x-0.5"
               />
             </div>
           </motion.a>
         </div>
       </div>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2 2xl:grid-cols-3">
-        <ResultCard
-          label="Ahorro / mes"
-          value={results.monthlySavingsArs}
-          formatter={formatCurrencyArs}
-          delay={0.04}
-          icon={TrendingUp}
-        />
-        <ResultCard
-          label="Horas libres / mes"
-          value={results.monthlyHoursRecovered}
-          formatter={(value) => `${formatCompactNumber(value)} hs`}
-          delay={0.1}
-          icon={Coins}
-        />
-        <ResultCard
-          label="Ahorro anual"
-          value={results.annualSavingsArs}
-          formatter={formatCurrencyArs}
-          delay={0.16}
-          icon={Wallet}
-        />
-      </div>
+      <StaggerReveal className="mt-6 grid gap-4 md:grid-cols-2 2xl:grid-cols-3" delay={0.1} stagger={0.09}>
+        <StaggerItem className="h-full">
+          <ResultCard
+            label="Ahorro / mes"
+            value={results.monthlySavingsArs}
+            formatter={formatCurrencyArs}
+            icon={TrendingUp}
+          />
+        </StaggerItem>
+        <StaggerItem className="h-full">
+          <ResultCard
+            label="Horas libres / mes"
+            value={results.monthlyHoursRecovered}
+            formatter={(value) => `${formatCompactNumber(value)} hs`}
+            icon={Coins}
+          />
+        </StaggerItem>
+        <StaggerItem className="h-full">
+          <ResultCard
+            label="Ahorro anual"
+            value={results.annualSavingsArs}
+            formatter={formatCurrencyArs}
+            icon={Wallet}
+          />
+        </StaggerItem>
+      </StaggerReveal>
     </div>
   )
 }
