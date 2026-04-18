@@ -114,8 +114,8 @@ function RoiProjectionChart({
     <div className="surface-panel surface-panel-soft p-4 sm:p-5">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-medium text-white">Proyección de ahorro a 12 meses</p>
-          <p className="mt-1 text-sm text-white/50">
+          <p className="text-[15px] font-semibold text-white">Proyección de ahorro a 12 meses</p>
+          <p className="mt-1 text-[13px] leading-5 text-white/50">
             Se acumula automáticamente mes a mes según el ahorro estimado actual.
           </p>
         </div>
@@ -210,17 +210,17 @@ type ResultCardProps = {
 
 function ResultCard({ label, value, formatter, icon: Icon }: ResultCardProps) {
   return (
-    <BorderGlowCard className="relative h-full min-h-[10.5rem] p-5">
+    <BorderGlowCard className="relative h-full min-h-[8rem] p-4 sm:p-5">
       <div className="flex h-full flex-col">
-        <div className="flex min-h-[2.75rem] items-start justify-between gap-3">
-          <p className="max-w-[9ch] text-[10px] font-semibold uppercase leading-[1.35] tracking-[0.26em] text-white/60">
+        <div className="flex items-start justify-between gap-2">
+          <p className="text-[11px] font-semibold uppercase leading-[1.35] tracking-[0.22em] text-white/55">
             {label}
           </p>
-          <div className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-[1rem] border border-[var(--color-accent)]/18 bg-[var(--color-accent)]/10 text-[var(--color-accent)] shadow-[0_0_24px_rgba(31,127,115,0.08)]">
-            <Icon size={16} />
+          <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.85rem] border border-[var(--color-accent)]/18 bg-[var(--color-accent)]/10 text-[var(--color-accent)]">
+            <Icon size={14} />
           </div>
         </div>
-        <p className="mt-auto overflow-hidden break-words pt-5 text-[clamp(1.4rem,1.7vw,2.2rem)] font-medium leading-[1] tracking-[-0.05em] text-white">
+        <p className="mt-auto overflow-hidden break-words pt-4 text-[1.6rem] font-medium leading-[1] tracking-[-0.05em] text-white">
           <AnimatedMetric value={value} formatter={formatter} />
         </p>
       </div>
@@ -375,7 +375,7 @@ export function ROICalculator() {
         </div>
       </div>
 
-      <StaggerReveal className="mt-6 grid gap-4 md:grid-cols-2 2xl:grid-cols-3" delay={0.1} stagger={0.09}>
+      <StaggerReveal className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3" delay={0.1} stagger={0.09}>
         <StaggerItem className="h-full">
           <ResultCard
             label="Ahorro / mes"
