@@ -210,17 +210,18 @@ type ResultCardProps = {
 
 function ResultCard({ label, value, formatter, icon: Icon }: ResultCardProps) {
   return (
-    <BorderGlowCard className="relative h-full min-h-[8rem] p-4 sm:p-5">
+    <BorderGlowCard className="relative h-full min-h-[7.5rem] p-3 sm:p-5">
       <div className="flex h-full flex-col">
-        <div className="flex items-start justify-between gap-2">
-          <p className="text-[11px] font-semibold uppercase leading-[1.35] tracking-[0.22em] text-white/55">
+        <div className="flex items-start justify-between gap-1.5 sm:gap-2">
+          <p className="text-[10px] font-semibold uppercase leading-[1.35] tracking-[0.18em] text-white/55 sm:text-[11px] sm:tracking-[0.22em]">
             {label}
           </p>
-          <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-[0.85rem] border border-[var(--color-accent)]/18 bg-[var(--color-accent)]/10 text-[var(--color-accent)]">
-            <Icon size={14} />
+          <div className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-[0.75rem] border border-[var(--color-accent)]/18 bg-[var(--color-accent)]/10 text-[var(--color-accent)] sm:h-8 sm:w-8 sm:rounded-[0.85rem]">
+            <Icon size={12} className="sm:hidden" />
+            <Icon size={14} className="hidden sm:block" />
           </div>
         </div>
-        <p className="mt-auto overflow-hidden break-words pt-4 text-[1.6rem] font-medium leading-[1] tracking-[-0.05em] text-white">
+        <p className="mt-auto overflow-hidden break-words pt-3 text-[1.15rem] font-medium leading-[1] tracking-[-0.04em] text-white sm:pt-4 sm:text-[1.6rem]">
           <AnimatedMetric value={value} formatter={formatter} />
         </p>
       </div>
@@ -375,7 +376,7 @@ export function ROICalculator() {
         </div>
       </div>
 
-      <StaggerReveal className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3" delay={0.1} stagger={0.09}>
+      <StaggerReveal className="mt-6 grid grid-cols-3 gap-3 sm:gap-4" delay={0.1} stagger={0.09}>
         <StaggerItem className="h-full">
           <ResultCard
             label="Ahorro / mes"
