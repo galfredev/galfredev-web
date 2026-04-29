@@ -144,6 +144,7 @@ export function FounderSection() {
                   src={siteCopy.founderImage}
                   alt="Valentino Galfre"
                   fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 60vw, 540px"
                   className="object-cover"
                 />
 
